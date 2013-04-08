@@ -4,17 +4,17 @@
 	var $Blockade_$Program = function() {
 		this.$blockSize = 20;
 		this.$currentMazePoint = null;
-		this.$startMouse = null;
-		this.$placeCanvasInfo = null;
 		this.$mazeCanvasInfo = null;
-		this.$myWidth = 0;
+		this.$placeCanvasInfo = null;
+		this.$dragging = false;
+		this.$lineSize = 2;
 		this.$myHeight = 0;
-		this.data = null;
+		this.$myWidth = 0;
 		this.$positionOffset = new CommonLibraries.IntPoint(0, 0);
 		this.$scaleOffset = 1;
-		this.$dragging = false;
 		this.$scaling = false;
-		this.$lineSize = 2;
+		this.$startMouse = null;
+		this.data = null;
 	};
 	$Blockade_$Program.prototype = {
 		$touchDown: function(x, y) {
@@ -34,10 +34,7 @@
 				return;
 			}
 			if (this.$scaling) {
-				if (this.$scaleOffset < 0.25) {
-					return;
-				}
-				this.$scaleOffset += pd.y / 100;
+				this.$scaleOffset = Math.max(this.$scaleOffset + pd.y / 100, 0.35);
 				this.$draw();
 				return;
 			}
@@ -104,31 +101,48 @@
 			}), ss.mkdel(this, function() {
 				this.$scaling = false;
 			}));
+			window.addEventListener('resize', ss.mkdel(this, function(e) {
+				this.$resizeCanvas();
+			}));
+			$(document).resize(ss.mkdel(this, function(e1) {
+				this.$resizeCanvas();
+			}));
 			document.body.appendChild(stats.element);
 			this.$currentMazePoint = new CommonLibraries.IntPoint(0, 0);
-			this.data = new $Blockade_MazeData(100);
+			this.data = new $Blockade_MazeData(50);
 			var carver = new $Blockade_Carver(this.data);
 			carver.walk();
-			this.$myWidth = $(window).width() - 40;
-			this.$myHeight = $(window).height() - 40;
+			this.$myWidth = $(window).width();
+			this.$myHeight = $(window).height();
+			this.$positionOffset.x += ss.Int32.trunc(this.$myWidth / 8);
+			this.$positionOffset.y += ss.Int32.trunc(this.$myHeight / 8);
 			//
-			//            var @lock=Document.Body.me().requestPointerLock ||
+			//						var @lock=Document.Body.me().requestPointerLock ||
 			//
-			//            Document.Body.me().mozRequestPointerLock ||
+			//						Document.Body.me().mozRequestPointerLock ||
 			//
-			//            Document.Body.me().webkitRequestPointerLock;
+			//						Document.Body.me().webkitRequestPointerLock;
 			//
-			//            @lock();
+			//						@lock();
 			this.$setup();
 			this.$draw();
 		},
+		$resizeCanvas: function() {
+			this.$myWidth = $(window).width();
+			this.$myHeight = $(window).height();
+			this.$placeCanvasInfo.domCanvas.attr('width', this.$myWidth.toString());
+			this.$placeCanvasInfo.domCanvas.attr('height', this.$myHeight.toString());
+			this.$mazeCanvasInfo.domCanvas.attr('width', this.$myWidth.toString());
+			this.$mazeCanvasInfo.domCanvas.attr('height', this.$myHeight.toString());
+			this.$draw();
+		},
 		$setup: function() {
-			this.$mazeCanvasInfo = $Blockade_CanvasInformation.create(this.$myWidth, this.$myHeight);
+			this.$mazeCanvasInfo = $Blockade_CanvasInformation.create(ss.Int32.trunc(this.$myWidth), ss.Int32.trunc(this.$myHeight));
 			$(document.body).append(this.$mazeCanvasInfo.canvas);
 			this.$mazeCanvasInfo.canvas.style.position = 'absolute';
 			this.$mazeCanvasInfo.canvas.style.left = '0';
 			this.$mazeCanvasInfo.canvas.style.top = '0';
-			this.$placeCanvasInfo = $Blockade_CanvasInformation.create(this.$myWidth, this.$myHeight);
+			this.$placeCanvasInfo = $Blockade_CanvasInformation.create(ss.Int32.trunc(this.$myWidth), ss.Int32.trunc(this.$myHeight));
 			$(document.body).append(this.$placeCanvasInfo.canvas);
 			this.$placeCanvasInfo.canvas.style.position = 'absolute';
 			this.$placeCanvasInfo.canvas.style.left = '0';
@@ -141,13 +155,30 @@
 				var cursorPosition = $Blockade_$Program.$getCursorPosition(a);
 				this.$touchDrag(ss.Int32.trunc(cursorPosition.x), ss.Int32.trunc(cursorPosition.y));
 			}));
-			this.$placeCanvasInfo.domCanvas.mousedown(ss.mkdel(this, function(a1) {
+			this.$placeCanvasInfo.domCanvas.bind('touchstart', ss.mkdel(this, function(a1) {
 				a1.preventDefault();
 				var cursorPosition1 = $Blockade_$Program.$getCursorPosition(a1);
 				this.$touchDown(ss.Int32.trunc(cursorPosition1.x), ss.Int32.trunc(cursorPosition1.y));
 			}));
-			this.$placeCanvasInfo.domCanvas.mouseup(ss.mkdel(this, function(a2) {
+			this.$placeCanvasInfo.domCanvas.bind('touchend', ss.mkdel(this, function(a2) {
 				a2.preventDefault();
+				this.$startMouse = null;
+			}));
+			this.$placeCanvasInfo.domCanvas.bind('touchmove', ss.mkdel(this, function(a3) {
+				a3.preventDefault();
+				if (ss.isNullOrUndefined(this.$startMouse)) {
+					return;
+				}
+				var cursorPosition2 = $Blockade_$Program.$getCursorPosition(a3);
+				this.$touchDrag(ss.Int32.trunc(cursorPosition2.x), ss.Int32.trunc(cursorPosition2.y));
+			}));
+			this.$placeCanvasInfo.domCanvas.mousedown(ss.mkdel(this, function(a4) {
+				a4.preventDefault();
+				var cursorPosition3 = $Blockade_$Program.$getCursorPosition(a4);
+				this.$touchDown(ss.Int32.trunc(cursorPosition3.x), ss.Int32.trunc(cursorPosition3.y));
+			}));
+			this.$placeCanvasInfo.domCanvas.mouseup(ss.mkdel(this, function(a5) {
+				a5.preventDefault();
 				this.$startMouse = null;
 			}));
 		},
@@ -155,26 +186,28 @@
 			var canvas = this.$mazeCanvasInfo.context;
 			canvas.save();
 			canvas.clearRect(0, 0, this.$myWidth, this.$myHeight);
-			canvas.fillStyle = 'black';
-			//canvas.FillRect(0, 0, width, height);
 			canvas.fillStyle = 'white';
-			canvas.translate(ss.Int32.div(this.$myWidth, 2) - this.$currentMazePoint.x * this.$blockSize + this.$positionOffset.x, ss.Int32.div(this.$myHeight, 2) - this.$currentMazePoint.y * this.$blockSize + this.$positionOffset.y);
+			canvas.translate(this.$positionOffset.x - this.$currentMazePoint.x * this.$blockSize, this.$positionOffset.y - this.$currentMazePoint.y * this.$blockSize);
 			canvas.scale(this.$scaleOffset, this.$scaleOffset);
 			canvas.lineCap = 'round';
 			canvas.lineJoin = 'round';
 			for (var i = 0; i < this.data.mazeSize; i++) {
 				for (var a = 0; a < this.data.mazeSize; a++) {
-					if (ss.arrayGet(this.data.walls, i, a).contains(3)) {
-						canvas.fillRect((i + 1) * this.$blockSize, a * this.$blockSize, this.$lineSize, this.$blockSize);
-					}
-					if (ss.arrayGet(this.data.walls, i, a).contains(2)) {
-						canvas.fillRect(i * this.$blockSize - this.$lineSize, a * this.$blockSize, this.$lineSize, this.$blockSize);
-					}
-					if (ss.arrayGet(this.data.walls, i, a).contains(1)) {
-						canvas.fillRect(i * this.$blockSize, a * this.$blockSize, this.$blockSize, this.$lineSize);
-					}
-					if (ss.arrayGet(this.data.walls, i, a).contains(0)) {
-						canvas.fillRect(i * this.$blockSize, (a + 1) * this.$blockSize - this.$lineSize, this.$blockSize, this.$lineSize);
+					var i1 = i * this.$blockSize - this.$currentMazePoint.x * this.$blockSize + this.$positionOffset.x;
+					var a1 = a * this.$blockSize - this.$currentMazePoint.y * this.$blockSize + this.$positionOffset.y;
+					if (i1 > -this.$blockSize && i1 < this.$myWidth / this.$scaleOffset && a1 > -this.$blockSize && a1 < this.$myHeight / this.$scaleOffset) {
+						if (this.data.walls[i][a].contains(3)) {
+							canvas.fillRect((i + 1) * this.$blockSize, a * this.$blockSize - this.$lineSize * 2, this.$lineSize, this.$blockSize + this.$lineSize * 2);
+						}
+						if (this.data.walls[i][a].contains(2)) {
+							canvas.fillRect(i * this.$blockSize - this.$lineSize, a * this.$blockSize - this.$lineSize * 2, this.$lineSize, this.$blockSize + this.$lineSize * 2);
+						}
+						if (this.data.walls[i][a].contains(1)) {
+							canvas.fillRect(i * this.$blockSize - this.$lineSize * 2, a * this.$blockSize, this.$blockSize + this.$lineSize * 2, this.$lineSize);
+						}
+						if (this.data.walls[i][a].contains(0)) {
+							canvas.fillRect(i * this.$blockSize - this.$lineSize * 2, (a + 1) * this.$blockSize - this.$lineSize, this.$blockSize + this.$lineSize * 2, this.$lineSize);
+						}
 					}
 				}
 			}
@@ -185,30 +218,38 @@
 			var canvas = this.$placeCanvasInfo.context;
 			canvas.save();
 			canvas.clearRect(0, 0, this.$myWidth, this.$myHeight);
-			canvas.translate(ss.Int32.div(this.$myWidth, 2) - this.$currentMazePoint.x * this.$blockSize + this.$positionOffset.x, ss.Int32.div(this.$myHeight, 2) - this.$currentMazePoint.y * this.$blockSize + this.$positionOffset.y);
+			canvas.translate(this.$positionOffset.x - this.$currentMazePoint.x * this.$blockSize, this.$positionOffset.y - this.$currentMazePoint.y * this.$blockSize);
 			canvas.scale(this.$scaleOffset, this.$scaleOffset);
 			canvas.lineCap = 'round';
 			canvas.lineJoin = 'round';
-			var vf = this.data.mazeBuilder.magnify(this.$blockSize);
+			var vf = this.data.mazeBuilder.blockify(this.$blockSize);
 			var inj = vf.length;
 			if (inj > 1) {
-				var fj = 0;
-				var $t1 = $Blockade_$Program.$toRects(vf);
-				for (var $t2 = 0; $t2 < $t1.length; $t2++) {
-					var m = $t1[$t2];
-					fj++;
-					var pt = this.data.mazeBuilder.points[fj];
-					if (ss.arrayGet(this.data.mazeBuilder.numHits, pt.x, pt.y)) {
-						canvas.save();
-						canvas.fillStyle = 'green';
-						canvas.fillRect(m.item2.left, m.item2.top, m.item2.get_width(), m.item2.get_height());
-						canvas.restore();
+				for (var $t1 = 0; $t1 < vf.length; $t1++) {
+					var m = vf[$t1];
+					var i1 = m.item1.x * this.$blockSize - this.$currentMazePoint.x * this.$blockSize + this.$positionOffset.x;
+					var a1 = m.item1.y * this.$blockSize - this.$currentMazePoint.y * this.$blockSize + this.$positionOffset.y;
+					if (i1 > -this.$blockSize && i1 < this.$myWidth / this.$scaleOffset && a1 > -this.$blockSize && a1 < this.$myHeight / this.$scaleOffset) {
+						if (this.data.mazeBuilder.numHits[m.item1.x][m.item1.y]) {
+							canvas.save();
+							canvas.fillStyle = 'green';
+							canvas.fillRect(m.item3.left, m.item3.top, m.item3.get_width(), m.item3.get_height());
+							canvas.restore();
+						}
+						else {
+							canvas.save();
+							canvas.fillStyle = 'blue';
+							canvas.fillRect(m.item3.left, m.item3.top, m.item3.get_width(), m.item3.get_height());
+							canvas.restore();
+						}
 					}
-					else {
-						canvas.save();
-						canvas.fillStyle = 'blue';
-						canvas.fillRect(m.item2.left, m.item2.top, m.item2.get_width(), m.item2.get_height());
-						canvas.restore();
+				}
+				for (var $t2 = 0; $t2 < vf.length; $t2++) {
+					var m1 = vf[$t2];
+					var i11 = m1.item1.x * this.$blockSize - this.$currentMazePoint.x * this.$blockSize + this.$positionOffset.x;
+					var a11 = m1.item1.y * this.$blockSize - this.$currentMazePoint.y * this.$blockSize + this.$positionOffset.y;
+					if (i11 > -this.$blockSize && i11 < this.$myWidth / this.$scaleOffset && a11 > -this.$blockSize && a11 < this.$myHeight / this.$scaleOffset) {
+						this.$drawCircle(canvas, m1.item2.x, m1.item2.y, 'purple', this.$lineSize * 2);
 					}
 				}
 				this.$drawCircle(canvas, this.$currentMazePoint.x * this.$blockSize + ss.Int32.div(this.$blockSize, 2), this.$currentMazePoint.y * this.$blockSize + ss.Int32.div(this.$blockSize, 2), 'red', this.$lineSize * 4);
@@ -245,34 +286,6 @@
 		//if (ev.x != null && ev.y != null) return new { x: ev.x, y: ev.y };
 		return new $Blockade_Pointer(ev.clientX, ev.clientY, 0, ev.which === 3);
 	};
-	$Blockade_$Program.$toRects = function(vf) {
-		var lst = [];
-		for (var index = 0; index < vf.length - 1; index++) {
-			var point = vf[index];
-			var point2 = vf[index + 1];
-			var left, right, top, bottom;
-			var cur;
-			if (point2.x > point.x) {
-				left = point.x - 1;
-				right = point2.x + 1;
-			}
-			else {
-				left = point2.x - 1;
-				right = point.x + 1;
-			}
-			if (point2.y > point.y) {
-				top = point.y - 1;
-				bottom = point2.y + 1;
-			}
-			else {
-				top = point2.y - 1;
-				bottom = point.y + 1;
-			}
-			cur = new $Blockade_Rect(left, top, right, bottom);
-			ss.add(lst, { item1: point, item2: cur });
-		}
-		return lst;
-	};
 	////////////////////////////////////////////////////////////////////////////////
 	// Blockade.Builder
 	var $Blockade_Builder = function(wallInfo) {
@@ -280,8 +293,11 @@
 		this.numHits = null;
 		this.$theWalls = null;
 		this.$theWalls = wallInfo;
-		this.numHits = ss.multidimArray(false, wallInfo.length, wallInfo.length);
-		ss.arraySet(this.numHits, 0, 0, true);
+		this.numHits = new Array(wallInfo.length);
+		for (var i = 0; i < wallInfo.length; i++) {
+			this.numHits[i] = new Array(wallInfo.length);
+		}
+		this.numHits[0][0] = true;
 		this.points = [];
 		this.addIntPoint(new CommonLibraries.IntPoint(0, 0), true);
 	};
@@ -302,22 +318,22 @@
 				return 0;
 			}
 			if (pr.x + 1 === p.x) {
-				if (ss.arrayGet(this.$theWalls, p.x, p.y).contains(2)) {
+				if (this.$theWalls[p.x][p.y].contains(2)) {
 					return 1;
 				}
 			}
 			else if (pr.x - 1 === p.x) {
-				if (ss.arrayGet(this.$theWalls, p.x, p.y).contains(3)) {
+				if (this.$theWalls[p.x][p.y].contains(3)) {
 					return 1;
 				}
 			}
 			else if (pr.y + 1 === p.y) {
-				if (ss.arrayGet(this.$theWalls, p.x, p.y).contains(1)) {
+				if (this.$theWalls[p.x][p.y].contains(1)) {
 					return 1;
 				}
 			}
 			else if (pr.y - 1 === p.y) {
-				if (ss.arrayGet(this.$theWalls, p.x, p.y).contains(0)) {
+				if (this.$theWalls[p.x][p.y].contains(0)) {
 					return 1;
 				}
 			}
@@ -333,7 +349,7 @@
 			//   }
 			//   else
 			//   NumHits[p.X, p.Y] = !NumHits[p.X, p.Y];
-			ss.arraySet(this.numHits, p.x, p.y, !ss.arrayGet(this.numHits, p.x, p.y));
+			this.numHits[p.x][p.y] = !this.numHits[p.x][p.y];
 			//
 			//            var pm = Points[Points.Count - 1];
 			//
@@ -341,22 +357,47 @@
 			ss.add(this.points, p);
 			return 0;
 		},
-		magnify: function(blockSize) {
+		blockify: function(blockSize) {
 			var ps = [];
 			for (var $t1 = 0; $t1 < this.points.length; $t1++) {
-				var IntPoint = this.points[$t1];
-				ss.add(ps, new CommonLibraries.IntPoint(IntPoint.x * blockSize + ss.Int32.div(blockSize, 2), IntPoint.y * blockSize + ss.Int32.div(blockSize, 2)));
+				var point = this.points[$t1];
+				var pt = new CommonLibraries.IntPoint(point.x * blockSize + ss.Int32.div(blockSize, 2), point.y * blockSize + ss.Int32.div(blockSize, 2));
+				ss.add(ps, pt);
 			}
-			return ps;
+			var pts = [];
+			if (ps.length === 1) {
+				ss.add(pts, { item1: this.points[0], item2: ps[0], item3: null });
+			}
+			for (var index = 0; index < ps.length - 1; index++) {
+				var intPoint = ps[index];
+				ss.add(pts, { item1: this.points[index], item2: intPoint, item3: $Blockade_Builder.toRect(ps, index) });
+			}
+			return pts;
 		}
 	};
-	$Blockade_Builder.magnify = function(IntPoints, blockSize, offset) {
-		var ps = [];
-		for (var $t1 = 0; $t1 < IntPoints.length; $t1++) {
-			var IntPoint = IntPoints[$t1];
-			ss.add(ps, new CommonLibraries.IntPoint(ss.Int32.trunc(IntPoint.x * blockSize) + ss.Int32.trunc(blockSize / 2) + offset.x, ss.Int32.trunc(IntPoint.y * blockSize) + ss.Int32.trunc(blockSize / 2) + offset.y));
+	$Blockade_Builder.toRect = function(vf, index) {
+		var point = vf[index];
+		var point2 = vf[index + 1];
+		var left, right, top, bottom;
+		var cur;
+		if (point2.x > point.x) {
+			left = point.x - 1;
+			right = point2.x + 1;
 		}
-		return ps;
+		else {
+			left = point2.x - 1;
+			right = point.x + 1;
+		}
+		if (point2.y > point.y) {
+			top = point.y - 1;
+			bottom = point2.y + 1;
+		}
+		else {
+			top = point2.y - 1;
+			bottom = point.y + 1;
+		}
+		cur = new $Blockade_Rect(left, top, right, bottom);
+		return cur;
 	};
 	////////////////////////////////////////////////////////////////////////////////
 	// Blockade.CanvasInformation
@@ -408,7 +449,10 @@
 	};
 	$Blockade_Carver.prototype = {
 		walk: function() {
-			this.bw = ss.multidimArray(false, this.data.mazeSize, this.data.mazeSize);
+			this.bw = new Array(this.data.mazeSize);
+			for (var i = 0; i < this.data.mazeSize; i++) {
+				this.bw[i] = new Array(this.data.mazeSize);
+			}
 			this.walker(0, 0);
 		},
 		walker: function(cx, cy) {
@@ -417,12 +461,12 @@
 				var direction = $t1[$t2];
 				var nx = cx + this.$getDX(direction);
 				var ny = cy + this.$getDY(direction);
-				if (ny >= 0 && ny <= this.data.mazeSize - 1 && nx >= 0 && nx <= this.data.mazeSize - 1 && !ss.arrayGet(this.bw, nx, ny)) {
+				if (ny >= 0 && ny <= this.data.mazeSize - 1 && nx >= 0 && nx <= this.data.mazeSize - 1 && !this.bw[nx][ny]) {
 					//if (!bw[nx][ny]) 
 					{
-						ss.arraySet(this.bw, nx, ny, true);
-						ss.arrayGet(this.data.walls, cx, cy).remove(direction);
-						ss.arrayGet(this.data.walls, nx, ny).remove(this.$getOpposite(direction));
+						this.bw[nx][ny] = true;
+						this.data.walls[cx][cy].remove(direction);
+						this.data.walls[nx][ny].remove(this.$getOpposite(direction));
 						this.walker(nx, ny);
 					}
 				}
@@ -506,10 +550,11 @@
 		this.walls = null;
 		this.mazeBuilder = null;
 		this.mazeSize = mazeSize;
-		this.walls = ss.multidimArray(null, mazeSize, mazeSize);
+		this.walls = new Array(mazeSize);
 		for (var i = 0; i < this.mazeSize; i++) {
+			this.walls[i] = new Array(this.mazeSize);
 			for (var a = 0; a < this.mazeSize; a++) {
-				ss.arraySet(this.walls, i, a, $Blockade_WallInfo.all());
+				this.walls[i][a] = $Blockade_WallInfo.all();
 			}
 		}
 		this.mazeBuilder = new $Blockade_Builder(this.walls);

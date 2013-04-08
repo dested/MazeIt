@@ -9,7 +9,7 @@ namespace Blockade
         [IntrinsicProperty]
         public MazeData Data { get; set; }
         [IntrinsicProperty]
-        public bool[,] bw { get; set; }
+        public bool[][] bw { get; set; }
 
         public Carver(MazeData data)
         {
@@ -18,8 +18,12 @@ namespace Blockade
 
         public void Walk()
         {
-            bw = new bool[Data.MazeSize,Data.MazeSize]; 
-            walker(0, 0);
+            bw = new bool[Data.MazeSize][];
+            for (int i = 0; i < Data.MazeSize; i++)
+            {
+                bw[i] = new bool[Data.MazeSize];
+            }
+            walker(0, 0); 
         }
 
         public void walker(int cx, int cy)
@@ -27,12 +31,12 @@ namespace Blockade
             foreach (WallPiece direction in RandomizeEach()) {
                 int nx = cx + getDX(direction);
                 int ny = cy + getDY(direction);
-                if (ny >= 0 && ny <= Data.MazeSize - 1 && nx >= 0 && nx <= Data.MazeSize - 1 && !bw[nx, ny]) {
+                if (ny >= 0 && ny <= Data.MazeSize - 1 && nx >= 0 && nx <= Data.MazeSize - 1 && !bw[nx][ ny]) {
                     //if (!bw[nx][ny]) 
                     {
-                        bw[nx, ny] = true;
-                        Data.Walls[cx, cy].Remove(direction);
-                        Data.Walls[nx, ny].Remove(getOpposite(direction));
+                        bw[nx][ ny] = true;
+                        Data.Walls[cx][ cy].Remove(direction);
+                        Data.Walls[nx][ny].Remove(getOpposite(direction));
                         walker(nx, ny);
                     }
                 }

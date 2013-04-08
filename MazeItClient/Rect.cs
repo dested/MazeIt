@@ -11,11 +11,11 @@ namespace Blockade
         public int Top { get; set; }
         [IntrinsicProperty]
         public int Bottom { get; set; }
-        public double Width
+        public int Width
         {
             get { return Right - Left; }
         }
-        public double Height
+        public int Height
         {
             get { return Bottom - Top; }
         }
