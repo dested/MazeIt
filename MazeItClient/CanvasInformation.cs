@@ -17,8 +17,7 @@ namespace Blockade
         {
             get
             {
-                if (blackPixel == null)
-                {
+                if (blackPixel == null) {
                     var m = Create(0, 0);
 
                     m.Context.FillStyle = "black";
@@ -34,12 +33,12 @@ namespace Blockade
         {
             Context = context;
             DomCanvas = domCanvas;
-            Canvas = (CanvasElement)domCanvas[0];
+            Canvas = (CanvasElement) domCanvas[0];
         }
 
         public static CanvasInformation Create(int w, int h)
         {
-            var canvas = (CanvasElement)Document.CreateElement("canvas");
+            var canvas = (CanvasElement) Document.CreateElement("canvas");
             return Create(canvas, w, h);
         }
 
@@ -50,7 +49,7 @@ namespace Blockade
             canvas.Width = w;
             canvas.Height = h;
 
-            var ctx = (CanvasContext2D)canvas.GetContext("2d");
+            var ctx = (CanvasContext2D) canvas.GetContext("2d");
             return new CanvasInformation(ctx, jQuery.FromElement(canvas));
         }
     }

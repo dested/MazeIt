@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using CommonLibraries;
-namespace Blockade
+namespace MazeItCommon
 {
     public class Builder
     {
-        public List<IntPoint> Points;
         public bool[][] NumHits;
+        public List<IntPoint> Points;
         private WallInfo[][] theWalls;
 
         public Builder(WallInfo[][] wallInfo)
@@ -38,7 +38,7 @@ namespace Blockade
             }
 
             if (pr.X + 1 == p.X) {
-                if (theWalls[p.X][ p.Y].Contains(WallPiece.East))
+                if (theWalls[p.X][p.Y].Contains(WallPiece.East))
                     return Status.Bad;
             } else if (pr.X - 1 == p.X) {
                 if (theWalls[p.X][p.Y].Contains(WallPiece.West))
@@ -53,7 +53,7 @@ namespace Blockade
 
             if (Points.Count > 0 && wasBad) return Points.Contains(p) ? Status.Good : Status.Bad;
 
-         /*   int inj = Points.Count;
+            /*   int inj = Points.Count;
             if (inj > 2) {
                 if (Points[inj - 1].X == p.X && Points[inj - 1].Y == p.Y)
 
@@ -80,12 +80,9 @@ namespace Blockade
             }
             List<Tuple<IntPoint, IntPoint, Rect>> pts = new List<Tuple<IntPoint, IntPoint, Rect>>();
             if (ps.Count == 1)
-            {
-                pts.Add(new Tuple<IntPoint, IntPoint, Rect>(Points[0],ps[0],null));
-            }
+                pts.Add(new Tuple<IntPoint, IntPoint, Rect>(Points[0], ps[0], null));
 
-            for (int index = 0; index < ps.Count - 1; index++)
-            {
+            for (int index = 0; index < ps.Count - 1; index++) {
                 var intPoint = ps[index];
                 pts.Add(Tuple.Create(Points[index], intPoint, toRect(ps, index)));
             }
@@ -93,42 +90,32 @@ namespace Blockade
             return pts;
         }
 
-        public static Rect toRect(List<IntPoint> vf,int index)
-        { 
+        public static Rect toRect(List<IntPoint> vf, int index)
+        {
+            IntPoint point = vf[index];
+            IntPoint point2 = vf[index + 1];
 
-           
-                IntPoint point = vf[index];
-                IntPoint point2 = vf[index + 1];
+            int left, right, top, bottom;
 
-                int left, right, top, bottom;
+            Rect cur;
+            if (point2.X > point.X) {
+                left = point.X - 1;
+                right = point2.X + 1;
+            } else {
+                left = point2.X - 1;
+                right = point.X + 1;
+            }
+            if (point2.Y > point.Y) {
+                top = point.Y - 1;
+                bottom = point2.Y + 1;
+            } else {
+                top = point2.Y - 1;
+                bottom = point.Y + 1;
+            }
 
-                Rect cur;
-                if (point2.X > point.X)
-                {
-                    left = point.X - 1;
-                    right = point2.X + 1;
-                }
-                else
-                {
-                    left = point2.X - 1;
-                    right = point.X + 1;
-                }
-                if (point2.Y > point.Y)
-                {
-                    top = point.Y - 1;
-                    bottom = point2.Y + 1;
-                }
-                else
-                {
-                    top = point2.Y - 1;
-                    bottom = point.Y + 1;
-                }
-
-                cur = new Rect(left, top, right, bottom);
+            cur = new Rect(left, top, right, bottom);
 
             return cur;
         }
-
-
-     }
+    }
 }

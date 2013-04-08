@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{51183D53-D09C-492E-9374-F7CA4A2DE8EB}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{399F38FA-7D90-42F6-880F-F10643F2BD28}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MazeItClient</RootNamespace>
-    <AssemblyName>MazeItClient</AssemblyName>
+    <RootNamespace>MazeItCommon</RootNamespace>
+    <AssemblyName>MazeItCommon</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -35,13 +35,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CanvasInformation.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="KeyboardJS.cs" />
-    <Compile Include="MazeGameClient.cs" />
-    <Compile Include="Pointer.cs" />
-    <Compile Include="Program.cs" />
+    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -70,18 +68,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MazeItCommon\MazeItCommon.csproj">
-      <Project>{399F38FA-7D90-42F6-880F-F10643F2BD28}</Project>
-      <Name>MazeItCommon</Name>
-    </ProjectReference>
+    <Compile Include="Builder.cs" />
+    <Compile Include="Carver.cs" />
+    <Compile Include="MazeData.cs" />
+    <Compile Include="MazeGame.cs" />
+    <Compile Include="Rect.cs" />
+    <Compile Include="Status.cs" />
+    <Compile Include="WallInfo.cs" />
+    <Compile Include="WallPiece.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition="!Exists('$(SolutionDir)packages\Saltarelle.Compiler.2.0.4\tools\Saltarelle.Compiler.targets')" />
   <Import Project="$(SolutionDir)packages\Saltarelle.Compiler.2.0.4\tools\Saltarelle.Compiler.targets" Condition="Exists('$(SolutionDir)packages\Saltarelle.Compiler.2.0.4\tools\Saltarelle.Compiler.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>Copy "$(TargetDir)*.js" "$(SolutionDir)MazeItClientOutput\"</PostBuildEvent>
+    <PostBuildEvent>Copy "$(TargetDir)*.js" "$(SolutionDir)MazeItClientOutput\"
+Copy "$(TargetDir)*.js" "$(SolutionDir)MazeItServerOutput\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

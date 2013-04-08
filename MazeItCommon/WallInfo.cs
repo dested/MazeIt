@@ -1,4 +1,4 @@
-﻿namespace Blockade
+namespace MazeItCommon
 {
     public class WallInfo
     {

@@ -1,5 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-namespace Blockade
+using System.Runtime.CompilerServices;
+namespace MazeItCommon
 {
     public class MazeData
     {
@@ -17,7 +17,7 @@ namespace Blockade
             for (int i = 0; i < MazeSize; i++) {
                 Walls[i] = new WallInfo[MazeSize];
                 for (int a = 0; a < MazeSize; a++) {
-                    Walls[i][ a] = WallInfo.All();
+                    Walls[i][a] = WallInfo.All();
                 }
             }
             MazeBuilder = new Builder(Walls);

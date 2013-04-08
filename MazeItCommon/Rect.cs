@@ -1,5 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-namespace Blockade
+using System.Runtime.CompilerServices;
+namespace MazeItCommon
 {
     public class Rect
     {

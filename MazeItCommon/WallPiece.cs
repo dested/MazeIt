@@ -1,4 +1,4 @@
-﻿namespace Blockade
+namespace MazeItCommon
 {
     public enum WallPiece
     {
