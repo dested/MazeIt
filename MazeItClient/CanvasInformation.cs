@@ -2,7 +2,7 @@
 using System.Html.Media.Graphics;
 using System.Runtime.CompilerServices;
 using jQueryApi;
-namespace Blockade
+namespace MazeItClient
 {
     public class CanvasInformation
     {

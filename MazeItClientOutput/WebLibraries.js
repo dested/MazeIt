@@ -1,9 +1,10 @@
-﻿(function() {
+
+(function() {
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ButtonClickedEvent
-	var $WebLibraries_Common_ShuffUI_ButtonClickedEvent = function() {
+	// WebLibraries.ShuffUI.ShuffUI.ButtonClickedEvent
+	var $WebLibraries_ShuffUI_ShuffUI_ButtonClickedEvent = function() {
 	};
-	$WebLibraries_Common_ShuffUI_ButtonClickedEvent.$ctor = function(x, y) {
+	$WebLibraries_ShuffUI_ShuffUI_ButtonClickedEvent.$ctor = function(x, y) {
 		var $this = {};
 		$this.x = 0;
 		$this.y = 0;
@@ -12,38 +13,38 @@
 		return $this;
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.CodeMirrorInformation
-	var $WebLibraries_Common_ShuffUI_CodeMirrorInformation = function() {
+	// WebLibraries.ShuffUI.ShuffUI.CodeMirrorInformation
+	var $WebLibraries_ShuffUI_ShuffUI_CodeMirrorInformation = function() {
 		this.codeElement = null;
 		this.editor = null;
 		this.element = null;
 		this.data = null;
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.CodeMirrorInformationData
-	var $WebLibraries_Common_ShuffUI_CodeMirrorInformationData = function() {
+	// WebLibraries.ShuffUI.ShuffUI.CodeMirrorInformationData
+	var $WebLibraries_ShuffUI_ShuffUI_CodeMirrorInformationData = function() {
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.DockStyle
-	var $WebLibraries_Common_ShuffUI_DockStyle = function() {
+	// WebLibraries.ShuffUI.ShuffUI.DockStyle
+	var $WebLibraries_ShuffUI_ShuffUI_DockStyle = function() {
 	};
-	$WebLibraries_Common_ShuffUI_DockStyle.prototype = { none: 0, fill: 1, fillWidth: 2, fillHeight: 3 };
-	ss.registerEnum(global, 'WebLibraries.Common.ShuffUI.DockStyle', $WebLibraries_Common_ShuffUI_DockStyle, false);
+	$WebLibraries_ShuffUI_ShuffUI_DockStyle.prototype = { none: 0, fill: 1, fillWidth: 2, fillHeight: 3 };
+	ss.registerEnum(global, 'WebLibraries.ShuffUI.ShuffUI.DockStyle', $WebLibraries_ShuffUI_ShuffUI_DockStyle, false);
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ParentChangedEvent
-	var $WebLibraries_Common_ShuffUI_ParentChangedEvent = function() {
+	// WebLibraries.ShuffUI.ShuffUI.ParentChangedEvent
+	var $WebLibraries_ShuffUI_ShuffUI_ParentChangedEvent = function() {
 	};
-	$WebLibraries_Common_ShuffUI_ParentChangedEvent.$ctor = function(parent) {
+	$WebLibraries_ShuffUI_ShuffUI_ParentChangedEvent.$ctor = function(parent) {
 		var $this = {};
 		$this.parent = null;
 		$this.parent = parent;
 		return $this;
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.PositionChangedEvent
-	var $WebLibraries_Common_ShuffUI_PositionChangedEvent = function() {
+	// WebLibraries.ShuffUI.ShuffUI.PositionChangedEvent
+	var $WebLibraries_ShuffUI_ShuffUI_PositionChangedEvent = function() {
 	};
-	$WebLibraries_Common_ShuffUI_PositionChangedEvent.$ctor = function(x, y) {
+	$WebLibraries_ShuffUI_ShuffUI_PositionChangedEvent.$ctor = function(x, y) {
 		var $this = {};
 		$this.x = 0;
 		$this.y = 0;
@@ -52,10 +53,10 @@
 		return $this;
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffButton
-	var $WebLibraries_Common_ShuffUI_ShuffButton = function(x, y, width, height, text, click) {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffButton
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffButton = function(x, y, width, height, text, click) {
 		this.text = null;
-		$WebLibraries_Common_ShuffUI_ShuffElement.call(this);
+		$WebLibraries_ShuffUI_ShuffUI_ShuffElement.call(this);
 		this.element = $('<div></div>');
 		this.element.css('position', 'absolute');
 		this.text = text;
@@ -70,43 +71,43 @@
 		this.set_visible(true);
 		this.element.button();
 		this.element.click(function(a) {
-			click($WebLibraries_Common_ShuffUI_ButtonClickedEvent.$ctor(a.clientX, a.clientY));
+			click($WebLibraries_ShuffUI_ShuffUI_ButtonClickedEvent.$ctor(a.clientX, a.clientY));
 		});
 		this.element.disableSelection();
 	};
-	$WebLibraries_Common_ShuffUI_ShuffButton.prototype = {
+	$WebLibraries_ShuffUI_ShuffUI_ShuffButton.prototype = {
 		bindCustomEvents: function() {
 		}
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffButton
-	var $WebLibraries_Common_ShuffUI_ShuffButton$1 = function(T) {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffButton
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffButton$1 = function(T) {
 		var $type = function(data, x, y, width, height, text, click) {
 			this.data = ss.getDefaultValue(T);
-			$WebLibraries_Common_ShuffUI_ShuffButton.call(this, x, y, width, height, text, click);
+			$WebLibraries_ShuffUI_ShuffUI_ShuffButton.call(this, x, y, width, height, text, click);
 			this.data = data;
 		};
-		ss.registerGenericClassInstance($type, $WebLibraries_Common_ShuffUI_ShuffButton$1, [T], function() {
-			return $WebLibraries_Common_ShuffUI_ShuffButton;
+		ss.registerGenericClassInstance($type, $WebLibraries_ShuffUI_ShuffUI_ShuffButton$1, [T], function() {
+			return $WebLibraries_ShuffUI_ShuffUI_ShuffButton;
 		}, function() {
 			return [];
 		});
 		return $type;
 	};
-	ss.registerGenericClass(global, 'WebLibraries.Common.ShuffUI.ShuffButton$1', $WebLibraries_Common_ShuffUI_ShuffButton$1, 1);
+	ss.registerGenericClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffButton$1', $WebLibraries_ShuffUI_ShuffUI_ShuffButton$1, 1);
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffCodeEditor
-	var $WebLibraries_Common_ShuffUI_ShuffCodeEditor = function() {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffCodeEditor
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffCodeEditor = function() {
 		this.information = null;
 		this.$codeMirror = null;
 		this.$2$TextChangedField = null;
 		this.text = null;
 		this.lineNumbers = false;
-		$WebLibraries_Common_ShuffUI_ShuffElement.call(this);
+		$WebLibraries_ShuffUI_ShuffUI_ShuffElement.call(this);
 		this.set_width(CommonLibraries.Number.op_Implicit$3('100%'));
 		this.set_height(CommonLibraries.Number.op_Implicit$3('100%'));
 	};
-	$WebLibraries_Common_ShuffUI_ShuffCodeEditor.prototype = {
+	$WebLibraries_ShuffUI_ShuffUI_ShuffCodeEditor.prototype = {
 		get_textChanged: function() {
 			return this.$2$TextChangedField;
 		},
@@ -157,13 +158,13 @@
 			}));
 		}
 	};
-	$WebLibraries_Common_ShuffUI_ShuffCodeEditor.$ctor1 = function(x, y, width, height, text) {
+	$WebLibraries_ShuffUI_ShuffUI_ShuffCodeEditor.$ctor1 = function(x, y, width, height, text) {
 		this.information = null;
 		this.$codeMirror = null;
 		this.$2$TextChangedField = null;
 		this.text = null;
 		this.lineNumbers = false;
-		$WebLibraries_Common_ShuffUI_ShuffElement.call(this);
+		$WebLibraries_ShuffUI_ShuffUI_ShuffElement.call(this);
 		var fmw = width;
 		var fmh = height;
 		if (!!!fmw) {
@@ -176,7 +177,7 @@
 		var fm = $('<textarea id=\'code\' name=\'code\' class=\'CodeMirror-fullscreen \' style=\'\'></textarea>');
 		divs.append(fm);
 		this.element = divs;
-		var $t1 = new $WebLibraries_Common_ShuffUI_CodeMirrorInformation();
+		var $t1 = new $WebLibraries_ShuffUI_ShuffUI_CodeMirrorInformation();
 		$t1.element = fm.get(0);
 		this.$codeMirror = $t1;
 		this.$codeMirror.element.value = this.text = text;
@@ -192,26 +193,26 @@
 			$(this.$codeMirror.element).height(CommonLibraries.Number.op_Implicit$1(e.height));
 		}));
 	};
-	$WebLibraries_Common_ShuffUI_ShuffCodeEditor.$ctor1.prototype = $WebLibraries_Common_ShuffUI_ShuffCodeEditor.prototype;
+	$WebLibraries_ShuffUI_ShuffUI_ShuffCodeEditor.$ctor1.prototype = $WebLibraries_ShuffUI_ShuffUI_ShuffCodeEditor.prototype;
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffCodeEditor
-	var $WebLibraries_Common_ShuffUI_ShuffCodeEditor$1 = function(T) {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffCodeEditor
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffCodeEditor$1 = function(T) {
 		var $type = function(data, x, y, width, height, text) {
 			this.data = ss.getDefaultValue(T);
-			$WebLibraries_Common_ShuffUI_ShuffCodeEditor.$ctor1.call(this, x, y, width, height, text);
+			$WebLibraries_ShuffUI_ShuffUI_ShuffCodeEditor.$ctor1.call(this, x, y, width, height, text);
 			this.data = data;
 		};
-		ss.registerGenericClassInstance($type, $WebLibraries_Common_ShuffUI_ShuffCodeEditor$1, [T], function() {
-			return $WebLibraries_Common_ShuffUI_ShuffCodeEditor;
+		ss.registerGenericClassInstance($type, $WebLibraries_ShuffUI_ShuffUI_ShuffCodeEditor$1, [T], function() {
+			return $WebLibraries_ShuffUI_ShuffUI_ShuffCodeEditor;
 		}, function() {
 			return [];
 		});
 		return $type;
 	};
-	ss.registerGenericClass(global, 'WebLibraries.Common.ShuffUI.ShuffCodeEditor$1', $WebLibraries_Common_ShuffUI_ShuffCodeEditor$1, 1);
+	ss.registerGenericClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffCodeEditor$1', $WebLibraries_ShuffUI_ShuffUI_ShuffCodeEditor$1, 1);
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffElement
-	var $WebLibraries_Common_ShuffUI_ShuffElement = function() {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffElement
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffElement = function() {
 		this.parentChanged = null;
 		this.parentSizeChanged = null;
 		this.positionChanged = null;
@@ -229,7 +230,7 @@
 		this.$myHeight = CommonLibraries.Number.op_Implicit$2(0);
 		this.$bindEvents();
 	};
-	$WebLibraries_Common_ShuffUI_ShuffElement.prototype = {
+	$WebLibraries_ShuffUI_ShuffUI_ShuffElement.prototype = {
 		get_dock: function() {
 			return this.$1$DockField;
 		},
@@ -241,7 +242,7 @@
 		},
 		set_x: function(value) {
 			this.$myX = value;
-			this.positionChanged($WebLibraries_Common_ShuffUI_PositionChangedEvent.$ctor(this.$myX, this.$myY));
+			this.positionChanged($WebLibraries_ShuffUI_ShuffUI_PositionChangedEvent.$ctor(this.$myX, this.$myY));
 		},
 		get_parent: function() {
 			return this.$1$ParentField;
@@ -254,28 +255,28 @@
 		},
 		set_y: function(value) {
 			this.$myY = value;
-			this.positionChanged($WebLibraries_Common_ShuffUI_PositionChangedEvent.$ctor(this.$myX, this.$myY));
+			this.positionChanged($WebLibraries_ShuffUI_ShuffUI_PositionChangedEvent.$ctor(this.$myX, this.$myY));
 		},
 		get_width: function() {
 			return this.$myWidth;
 		},
 		set_width: function(value) {
 			this.$myWidth = value;
-			this.sizeChanged($WebLibraries_Common_ShuffUI_SizeChangedEvent.$ctor(this.$myWidth, this.$myHeight));
+			this.sizeChanged($WebLibraries_ShuffUI_ShuffUI_SizeChangedEvent.$ctor(this.$myWidth, this.$myHeight));
 		},
 		get_height: function() {
 			return this.$myHeight;
 		},
 		set_height: function(value) {
 			this.$myHeight = value;
-			this.sizeChanged($WebLibraries_Common_ShuffUI_SizeChangedEvent.$ctor(this.$myWidth, this.$myHeight));
+			this.sizeChanged($WebLibraries_ShuffUI_ShuffUI_SizeChangedEvent.$ctor(this.$myWidth, this.$myHeight));
 		},
 		get_visible: function() {
 			return this.$myVisible;
 		},
 		set_visible: function(value) {
 			this.$myVisible = value;
-			this.visibleChanged($WebLibraries_Common_ShuffUI_VisibleChangedEvent.$ctor(this.$myVisible));
+			this.visibleChanged($WebLibraries_ShuffUI_ShuffUI_VisibleChangedEvent.$ctor(this.$myVisible));
 		},
 		$bindEvents: function() {
 			this.sizeChanged = ss.delegateCombine(this.sizeChanged, ss.mkdel(this, function(e) {
@@ -330,11 +331,11 @@
 		}
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffLabel
-	var $WebLibraries_Common_ShuffUI_ShuffLabel = function(x, y, text) {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffLabel
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffLabel = function(x, y, text) {
 		this.$myText = null;
 		this.$2$TextChangedField = null;
-		$WebLibraries_Common_ShuffUI_ShuffElement.call(this);
+		$WebLibraries_ShuffUI_ShuffUI_ShuffElement.call(this);
 		var but = $('<span></span>');
 		this.element = but;
 		but.css('position', 'absolute');
@@ -344,13 +345,13 @@
 		this.set_visible(true);
 		but.disableSelection();
 	};
-	$WebLibraries_Common_ShuffUI_ShuffLabel.prototype = {
+	$WebLibraries_ShuffUI_ShuffUI_ShuffLabel.prototype = {
 		get_text: function() {
 			return this.$myText;
 		},
 		set_text: function(value) {
 			this.$myText = value;
-			this.get_textChanged()($WebLibraries_Common_ShuffUI_TextChangedEvent.$ctor(this.$myText, false));
+			this.get_textChanged()($WebLibraries_ShuffUI_ShuffUI_TextChangedEvent.$ctor(this.$myText, false));
 		},
 		get_textChanged: function() {
 			return this.$2$TextChangedField;
@@ -365,28 +366,28 @@
 		}
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffLabel
-	var $WebLibraries_Common_ShuffUI_ShuffLabel$1 = function(T) {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffLabel
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffLabel$1 = function(T) {
 		var $type = function(data, x, y, text) {
 			this.data = ss.getDefaultValue(T);
-			$WebLibraries_Common_ShuffUI_ShuffLabel.call(this, x, y, text);
+			$WebLibraries_ShuffUI_ShuffUI_ShuffLabel.call(this, x, y, text);
 			this.data = data;
 		};
-		ss.registerGenericClassInstance($type, $WebLibraries_Common_ShuffUI_ShuffLabel$1, [T], function() {
-			return $WebLibraries_Common_ShuffUI_ShuffLabel;
+		ss.registerGenericClassInstance($type, $WebLibraries_ShuffUI_ShuffUI_ShuffLabel$1, [T], function() {
+			return $WebLibraries_ShuffUI_ShuffUI_ShuffLabel;
 		}, function() {
 			return [];
 		});
 		return $type;
 	};
-	ss.registerGenericClass(global, 'WebLibraries.Common.ShuffUI.ShuffLabel$1', $WebLibraries_Common_ShuffUI_ShuffLabel$1, 1);
+	ss.registerGenericClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffLabel$1', $WebLibraries_ShuffUI_ShuffUI_ShuffLabel$1, 1);
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffListBox
-	var $WebLibraries_Common_ShuffUI_ShuffListBox = function(x, y, width, height, items) {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffListBox
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffListBox = function(x, y, width, height, items) {
 		this.onClick = null;
 		this.items = null;
 		this.selectedItem = null;
-		$WebLibraries_Common_ShuffUI_ShuffElement.call(this);
+		$WebLibraries_ShuffUI_ShuffUI_ShuffElement.call(this);
 		var but = $('<div style=\'position:absolute;\'></div>');
 		this.element = but;
 		this.set_x(x);
@@ -410,7 +411,7 @@
 		}));
 		this.update();
 	};
-	$WebLibraries_Common_ShuffUI_ShuffListBox.prototype = {
+	$WebLibraries_ShuffUI_ShuffUI_ShuffListBox.prototype = {
 		bindCustomEvents: function() {
 		},
 		addItem: function(item) {
@@ -430,34 +431,34 @@
 		}
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffListBox
-	var $WebLibraries_Common_ShuffUI_ShuffListBox$1 = function(T) {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffListBox
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffListBox$1 = function(T) {
 		var $type = function(data, x, y, width, height) {
 			this.data = ss.getDefaultValue(T);
-			$WebLibraries_Common_ShuffUI_ShuffListBox.call(this, x, y, width, height, null);
+			$WebLibraries_ShuffUI_ShuffUI_ShuffListBox.call(this, x, y, width, height, null);
 			this.data = data;
 		};
-		ss.registerGenericClassInstance($type, $WebLibraries_Common_ShuffUI_ShuffListBox$1, [T], function() {
-			return $WebLibraries_Common_ShuffUI_ShuffListBox;
+		ss.registerGenericClassInstance($type, $WebLibraries_ShuffUI_ShuffUI_ShuffListBox$1, [T], function() {
+			return $WebLibraries_ShuffUI_ShuffUI_ShuffListBox;
 		}, function() {
 			return [];
 		});
 		return $type;
 	};
-	ss.registerGenericClass(global, 'WebLibraries.Common.ShuffUI.ShuffListBox$1', $WebLibraries_Common_ShuffUI_ShuffListBox$1, 1);
+	ss.registerGenericClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffListBox$1', $WebLibraries_ShuffUI_ShuffUI_ShuffListBox$1, 1);
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffListItem
-	var $WebLibraries_Common_ShuffUI_ShuffListItem = function(label, value) {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffListItem
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffListItem = function(label, value) {
 		this.label = null;
 		this.value = null;
 		this.label = label;
 		this.value = value;
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffPanel
-	var $WebLibraries_Common_ShuffUI_ShuffPanel = function() {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffPanel
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffPanel = function() {
 		this.elements = null;
-		$WebLibraries_Common_ShuffUI_ShuffElement.call(this);
+		$WebLibraries_ShuffUI_ShuffUI_ShuffElement.call(this);
 		this.elements = [];
 		var but = $('<div />');
 		this.element = but;
@@ -468,12 +469,12 @@
 		but.css('left', '0');
 		this.set_visible(true);
 	};
-	$WebLibraries_Common_ShuffUI_ShuffPanel.prototype = {
+	$WebLibraries_ShuffUI_ShuffUI_ShuffPanel.prototype = {
 		addElement: function(T) {
 			return function(element) {
 				this.element.append(element.element);
 				ss.add(this.elements, element);
-				element.parentChanged($WebLibraries_Common_ShuffUI_ParentChangedEvent.$ctor(this));
+				element.parentChanged($WebLibraries_ShuffUI_ShuffUI_ParentChangedEvent.$ctor(this));
 				return element;
 			};
 		},
@@ -481,18 +482,18 @@
 			return function(element) {
 				element.element.remove();
 				ss.remove(this.elements, element);
-				element.parentChanged($WebLibraries_Common_ShuffUI_ParentChangedEvent.$ctor(null));
+				element.parentChanged($WebLibraries_ShuffUI_ShuffUI_ParentChangedEvent.$ctor(null));
 				return element;
 			};
 		}
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffTextbox
-	var $WebLibraries_Common_ShuffUI_ShuffTextbox = function(x, y, width, height, text, label, labelStyle) {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffTextbox
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffTextbox = function(x, y, width, height, text, label, labelStyle) {
 		this.$2$TextChangedField = null;
 		this.$2$LabelElementField = null;
 		this.$2$OnEnterField = null;
-		$WebLibraries_Common_ShuffUI_ShuffElement.call(this);
+		$WebLibraries_ShuffUI_ShuffUI_ShuffElement.call(this);
 		var but = $('<input value=\'' + ss.coalesce(text, '') + '\' />');
 		this.element = but;
 		but.css('position', 'absolute');
@@ -529,12 +530,12 @@
 			}));
 		}
 	};
-	$WebLibraries_Common_ShuffUI_ShuffTextbox.prototype = {
+	$WebLibraries_ShuffUI_ShuffUI_ShuffTextbox.prototype = {
 		get_text: function() {
 			return this.element.val();
 		},
 		set_text: function(value) {
-			this.get_textChanged()($WebLibraries_Common_ShuffUI_TextChangedEvent.$ctor(value, false));
+			this.get_textChanged()($WebLibraries_ShuffUI_ShuffUI_TextChangedEvent.$ctor(value, false));
 		},
 		get_textChanged: function() {
 			return this.$2$TextChangedField;
@@ -566,27 +567,27 @@
 		}
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffTextbox
-	var $WebLibraries_Common_ShuffUI_ShuffTextbox$1 = function(T) {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffTextbox
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffTextbox$1 = function(T) {
 		var $type = function(data, x, y, width, height, text, label, labelStyle) {
 			this.data = ss.getDefaultValue(T);
-			$WebLibraries_Common_ShuffUI_ShuffTextbox.call(this, x, y, width, height, text, label, labelStyle);
+			$WebLibraries_ShuffUI_ShuffUI_ShuffTextbox.call(this, x, y, width, height, text, label, labelStyle);
 			this.data = data;
 		};
-		ss.registerGenericClassInstance($type, $WebLibraries_Common_ShuffUI_ShuffTextbox$1, [T], function() {
-			return $WebLibraries_Common_ShuffUI_ShuffTextbox;
+		ss.registerGenericClassInstance($type, $WebLibraries_ShuffUI_ShuffUI_ShuffTextbox$1, [T], function() {
+			return $WebLibraries_ShuffUI_ShuffUI_ShuffTextbox;
 		}, function() {
 			return [];
 		});
 		return $type;
 	};
-	ss.registerGenericClass(global, 'WebLibraries.Common.ShuffUI.ShuffTextbox$1', $WebLibraries_Common_ShuffUI_ShuffTextbox$1, 1);
+	ss.registerGenericClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffTextbox$1', $WebLibraries_ShuffUI_ShuffUI_ShuffTextbox$1, 1);
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffUIManager
-	var $WebLibraries_Common_ShuffUI_ShuffUIManager = function() {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffUIManager
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffUIManager = function() {
 		this.$uiAreas = [];
 	};
-	$WebLibraries_Common_ShuffUI_ShuffUIManager.prototype = {
+	$WebLibraries_ShuffUI_ShuffUI_ShuffUIManager.prototype = {
 		createWindow: function(ui) {
 			var windowID = ui.title;
 			var outer = $('<div class=\'window-outer\' style=\'background-color: #87B6D9; overflow:hidden;\'></div>');
@@ -621,7 +622,7 @@
 			outer.append(inner);
 			ui.window = $('#window' + windowID);
 			var info;
-			ss.add(this.$uiAreas, info = new $WebLibraries_Common_ShuffUI_UIAreaInformation(outer, inner));
+			ss.add(this.$uiAreas, info = new $WebLibraries_ShuffUI_ShuffUI_UIAreaInformation(outer, inner));
 			ui.information = info;
 			x.click(function(evt) {
 				outer.css('display', 'none');
@@ -682,8 +683,8 @@
 		}
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffWindow
-	var $WebLibraries_Common_ShuffUI_ShuffWindow = function() {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffWindow
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffWindow = function() {
 		this.outer = null;
 		this.window = null;
 		this.onClose = null;
@@ -692,9 +693,9 @@
 		this.allowMinimize = false;
 		this.staticPositioning = false;
 		this.information = null;
-		$WebLibraries_Common_ShuffUI_ShuffPanel.call(this);
+		$WebLibraries_ShuffUI_ShuffUI_ShuffPanel.call(this);
 	};
-	$WebLibraries_Common_ShuffUI_ShuffWindow.prototype = {
+	$WebLibraries_ShuffUI_ShuffUI_ShuffWindow.prototype = {
 		get_$outer: function() {
 			return this.outer;
 		},
@@ -707,11 +708,11 @@
 			this.set_height(CommonLibraries.Number.op_Implicit$3(uievent.size.height + 'px'));
 			for (var $t1 = 0; $t1 < this.elements.length; $t1++) {
 				var shuffElement = this.elements[$t1];
-				shuffElement.parentSizeChanged($WebLibraries_Common_ShuffUI_SizeChangedEvent.$ctor(this.get_width(), this.get_height()));
+				shuffElement.parentSizeChanged($WebLibraries_ShuffUI_ShuffUI_SizeChangedEvent.$ctor(this.get_width(), this.get_height()));
 			}
 		},
 		bindCustomEvents: function() {
-			$WebLibraries_Common_ShuffUI_ShuffElement.prototype.bindCustomEvents.call(this);
+			$WebLibraries_ShuffUI_ShuffUI_ShuffElement.prototype.bindCustomEvents.call(this);
 			this.visibleChanged = ss.delegateCombine(this.visibleChanged, ss.mkdel(this, function(e) {
 				if (ss.isValue(this.get_$outer())) {
 					this.get_$outer().css('display', (e.visible ? 'block' : 'none'));
@@ -779,25 +780,25 @@
 		}
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.ShuffWindow
-	var $WebLibraries_Common_ShuffUI_ShuffWindow$1 = function(T) {
+	// WebLibraries.ShuffUI.ShuffUI.ShuffWindow
+	var $WebLibraries_ShuffUI_ShuffUI_ShuffWindow$1 = function(T) {
 		var $type = function(data) {
 			this.data = ss.getDefaultValue(T);
-			$WebLibraries_Common_ShuffUI_ShuffWindow.call(this);
+			$WebLibraries_ShuffUI_ShuffUI_ShuffWindow.call(this);
 		};
-		ss.registerGenericClassInstance($type, $WebLibraries_Common_ShuffUI_ShuffWindow$1, [T], function() {
-			return $WebLibraries_Common_ShuffUI_ShuffWindow;
+		ss.registerGenericClassInstance($type, $WebLibraries_ShuffUI_ShuffUI_ShuffWindow$1, [T], function() {
+			return $WebLibraries_ShuffUI_ShuffUI_ShuffWindow;
 		}, function() {
 			return [];
 		});
 		return $type;
 	};
-	ss.registerGenericClass(global, 'WebLibraries.Common.ShuffUI.ShuffWindow$1', $WebLibraries_Common_ShuffUI_ShuffWindow$1, 1);
+	ss.registerGenericClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffWindow$1', $WebLibraries_ShuffUI_ShuffUI_ShuffWindow$1, 1);
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.SizeChangedEvent
-	var $WebLibraries_Common_ShuffUI_SizeChangedEvent = function() {
+	// WebLibraries.ShuffUI.ShuffUI.SizeChangedEvent
+	var $WebLibraries_ShuffUI_ShuffUI_SizeChangedEvent = function() {
 	};
-	$WebLibraries_Common_ShuffUI_SizeChangedEvent.$ctor = function(w, h) {
+	$WebLibraries_ShuffUI_ShuffUI_SizeChangedEvent.$ctor = function(w, h) {
 		var $this = {};
 		$this.width = null;
 		$this.height = null;
@@ -806,16 +807,16 @@
 		return $this;
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.SwingDirection
-	var $WebLibraries_Common_ShuffUI_SwingDirection = function() {
+	// WebLibraries.ShuffUI.ShuffUI.SwingDirection
+	var $WebLibraries_ShuffUI_ShuffUI_SwingDirection = function() {
 	};
-	$WebLibraries_Common_ShuffUI_SwingDirection.prototype = { topLeft: 0, top: 1, topRight: 2, right: 3, bottomRight: 4, bottom: 5, bottomLeft: 6, left: 7 };
-	ss.registerEnum(global, 'WebLibraries.Common.ShuffUI.SwingDirection', $WebLibraries_Common_ShuffUI_SwingDirection, false);
+	$WebLibraries_ShuffUI_ShuffUI_SwingDirection.prototype = { topLeft: 0, top: 1, topRight: 2, right: 3, bottomRight: 4, bottom: 5, bottomLeft: 6, left: 7 };
+	ss.registerEnum(global, 'WebLibraries.ShuffUI.ShuffUI.SwingDirection', $WebLibraries_ShuffUI_ShuffUI_SwingDirection, false);
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.TextChangedEvent
-	var $WebLibraries_Common_ShuffUI_TextChangedEvent = function() {
+	// WebLibraries.ShuffUI.ShuffUI.TextChangedEvent
+	var $WebLibraries_ShuffUI_ShuffUI_TextChangedEvent = function() {
 	};
-	$WebLibraries_Common_ShuffUI_TextChangedEvent.$ctor = function(text, live) {
+	$WebLibraries_ShuffUI_ShuffUI_TextChangedEvent.$ctor = function(text, live) {
 		var $this = {};
 		$this.text = null;
 		$this.live = false;
@@ -824,14 +825,14 @@
 		return $this;
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.UIAreaInformation
-	var $WebLibraries_Common_ShuffUI_UIAreaInformation = function(element, inner) {
+	// WebLibraries.ShuffUI.ShuffUI.UIAreaInformation
+	var $WebLibraries_ShuffUI_ShuffUI_UIAreaInformation = function(element, inner) {
 		this.$1$ElementField = null;
 		this.$1$InnerField = null;
 		this.set_element(element);
 		this.set_inner(inner);
 	};
-	$WebLibraries_Common_ShuffUI_UIAreaInformation.prototype = {
+	$WebLibraries_ShuffUI_ShuffUI_UIAreaInformation.prototype = {
 		get_element: function() {
 			return this.$1$ElementField;
 		},
@@ -846,32 +847,32 @@
 		}
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// WebLibraries.Common.ShuffUI.VisibleChangedEvent
-	var $WebLibraries_Common_ShuffUI_VisibleChangedEvent = function() {
+	// WebLibraries.ShuffUI.ShuffUI.VisibleChangedEvent
+	var $WebLibraries_ShuffUI_ShuffUI_VisibleChangedEvent = function() {
 	};
-	$WebLibraries_Common_ShuffUI_VisibleChangedEvent.$ctor = function(visible) {
+	$WebLibraries_ShuffUI_ShuffUI_VisibleChangedEvent.$ctor = function(visible) {
 		var $this = {};
 		$this.visible = false;
 		$this.visible = visible;
 		return $this;
 	};
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ButtonClickedEvent', $WebLibraries_Common_ShuffUI_ButtonClickedEvent);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.CodeMirrorInformation', $WebLibraries_Common_ShuffUI_CodeMirrorInformation);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.CodeMirrorInformationData', $WebLibraries_Common_ShuffUI_CodeMirrorInformationData);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ParentChangedEvent', $WebLibraries_Common_ShuffUI_ParentChangedEvent);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.PositionChangedEvent', $WebLibraries_Common_ShuffUI_PositionChangedEvent);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ShuffElement', $WebLibraries_Common_ShuffUI_ShuffElement);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ShuffButton', $WebLibraries_Common_ShuffUI_ShuffButton, $WebLibraries_Common_ShuffUI_ShuffElement);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ShuffCodeEditor', $WebLibraries_Common_ShuffUI_ShuffCodeEditor, $WebLibraries_Common_ShuffUI_ShuffElement);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ShuffLabel', $WebLibraries_Common_ShuffUI_ShuffLabel, $WebLibraries_Common_ShuffUI_ShuffElement);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ShuffListBox', $WebLibraries_Common_ShuffUI_ShuffListBox, $WebLibraries_Common_ShuffUI_ShuffElement);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ShuffListItem', $WebLibraries_Common_ShuffUI_ShuffListItem);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ShuffPanel', $WebLibraries_Common_ShuffUI_ShuffPanel, $WebLibraries_Common_ShuffUI_ShuffElement);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ShuffTextbox', $WebLibraries_Common_ShuffUI_ShuffTextbox, $WebLibraries_Common_ShuffUI_ShuffElement);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ShuffUIManager', $WebLibraries_Common_ShuffUI_ShuffUIManager);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.ShuffWindow', $WebLibraries_Common_ShuffUI_ShuffWindow, $WebLibraries_Common_ShuffUI_ShuffPanel);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.SizeChangedEvent', $WebLibraries_Common_ShuffUI_SizeChangedEvent);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.TextChangedEvent', $WebLibraries_Common_ShuffUI_TextChangedEvent);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.UIAreaInformation', $WebLibraries_Common_ShuffUI_UIAreaInformation);
-	ss.registerClass(global, 'WebLibraries.Common.ShuffUI.VisibleChangedEvent', $WebLibraries_Common_ShuffUI_VisibleChangedEvent);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ButtonClickedEvent', $WebLibraries_ShuffUI_ShuffUI_ButtonClickedEvent);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.CodeMirrorInformation', $WebLibraries_ShuffUI_ShuffUI_CodeMirrorInformation);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.CodeMirrorInformationData', $WebLibraries_ShuffUI_ShuffUI_CodeMirrorInformationData);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ParentChangedEvent', $WebLibraries_ShuffUI_ShuffUI_ParentChangedEvent);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.PositionChangedEvent', $WebLibraries_ShuffUI_ShuffUI_PositionChangedEvent);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffElement', $WebLibraries_ShuffUI_ShuffUI_ShuffElement);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffButton', $WebLibraries_ShuffUI_ShuffUI_ShuffButton, $WebLibraries_ShuffUI_ShuffUI_ShuffElement);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffCodeEditor', $WebLibraries_ShuffUI_ShuffUI_ShuffCodeEditor, $WebLibraries_ShuffUI_ShuffUI_ShuffElement);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffLabel', $WebLibraries_ShuffUI_ShuffUI_ShuffLabel, $WebLibraries_ShuffUI_ShuffUI_ShuffElement);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffListBox', $WebLibraries_ShuffUI_ShuffUI_ShuffListBox, $WebLibraries_ShuffUI_ShuffUI_ShuffElement);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffListItem', $WebLibraries_ShuffUI_ShuffUI_ShuffListItem);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffPanel', $WebLibraries_ShuffUI_ShuffUI_ShuffPanel, $WebLibraries_ShuffUI_ShuffUI_ShuffElement);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffTextbox', $WebLibraries_ShuffUI_ShuffUI_ShuffTextbox, $WebLibraries_ShuffUI_ShuffUI_ShuffElement);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffUIManager', $WebLibraries_ShuffUI_ShuffUI_ShuffUIManager);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.ShuffWindow', $WebLibraries_ShuffUI_ShuffUI_ShuffWindow, $WebLibraries_ShuffUI_ShuffUI_ShuffPanel);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.SizeChangedEvent', $WebLibraries_ShuffUI_ShuffUI_SizeChangedEvent);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.TextChangedEvent', $WebLibraries_ShuffUI_ShuffUI_TextChangedEvent);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.UIAreaInformation', $WebLibraries_ShuffUI_ShuffUI_UIAreaInformation);
+	ss.registerClass(global, 'WebLibraries.ShuffUI.ShuffUI.VisibleChangedEvent', $WebLibraries_ShuffUI_ShuffUI_VisibleChangedEvent);
 })();

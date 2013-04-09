@@ -1,29 +1,39 @@
+using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using CommonLibraries;
 namespace MazeItCommon
 {
     public class MazeGame
     {
-        protected IntPoint CurrentMazePoint;
         [IntrinsicProperty]
-        protected MazeData data { get; set; }
+        public List<MazeGameClientPlayer> PlayerList { get; set; }
+        [IntrinsicProperty]
+        public MazeData Data { get; set; }
+        [IntrinsicProperty]
+        public JsDictionary<int, Builder> MazeBuilders { get; set; }
 
-        public MazeGame()
+        public MazeGame(List<MazeGameClientPlayer> playerList, MazeData loadedData)
         {
-            CurrentMazePoint = new IntPoint(0, 0);
-            data = new MazeData(50);
-            Carver carver = new Carver(data);
-            carver.Walk();
+            PlayerList = playerList;
+            if (loadedData == null) {
+                Data = new MazeData(50);
+
+                Carver carver = new Carver(Data);
+                carver.Walk();
+            } else
+                Data = loadedData;
+
+            MazeBuilders = new JsDictionary<int, Builder>();
+
+            foreach (var mazeGameClientPlayer in PlayerList) {
+                MazeBuilders[mazeGameClientPlayer.ID] = new Builder(Data.Walls,RandomColor());
+            }
         }
 
-
-        protected bool AddMazePoint(IntPoint p0)
+        private string RandomColor()
         {
-            bool d;
-            if (d = ( data.MazeBuilder.AddIntPoint(p0, false) == Status.Good )) {
-                CurrentMazePoint = p0;
-            }
-            return d;
+            return "#" + ((int)(Math.Floor(Math.Random() * 16777215))).ToString(16);
         }
     }
 }

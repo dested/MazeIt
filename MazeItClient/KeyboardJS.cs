@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-namespace Blockade
+namespace MazeItClient
 {
     [Imported]
     public class KeyboardJS

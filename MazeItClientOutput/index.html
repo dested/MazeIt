@@ -1,47 +1,51 @@
 ﻿<!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, height=device-height">
-
-        <title>Maize</title>
-        <script type="text/javascript" src="lib/jquery.js"></script>
-
-        <script type="text/javascript" src="mscorlib.js"></script>
-        <script type="text/javascript" src="CommonLibraries.js"></script>
-        <script type="text/javascript" src="WebLibraries.js"></script>
-        <script type="text/javascript" src="lib/Stats.js"></script>
-        <script type="text/javascript" src="lib/keyboardjs.js"></script>
-        <script type="text/javascript">
-            String.prototype.toString = function() { return this; }
-        </script>
-        <script type="text/javascript" src="MazeItCommon.js"></script>
-        <script type="text/javascript" src="MazeItClient.js"></script>
-        <style type="text/css">
-            html, body {
-                height: 100%;
-                margin: 0;
-                padding: 0;
-                width: 100%;
-            }
-
-            body {
-                height: 100%;
-                position: relative;
-                width: 100%;
-            }
-            .xstats 
-{
-position:absolute;
-left:0px;
-top:0px;
-z-index:9999;
-}
-            body { background-color: #a115ee; }
-
-
-        </style>
-    </head>
-    <body  >
+<head>
+    <meta name="viewport" content="width=device-width, height=device-height">
+    <title>Maize</title>
+    <script type="text/javascript" src="lib/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="lib/jquery-ui-1.10.2.custom.js"> </script>
+    <script type="text/javascript" src="mscorlib.js"></script>
+    <script type="text/javascript" src="CommonLibraries.js"></script>
+    <script type="text/javascript" src="WebLibraries.js"></script>
+    <script type="text/javascript" src="lib/Stats.js"></script>
+    <script type="text/javascript" src="lib/socket.io.js"></script>
+    <script type="text/javascript" src="lib/keyboardjs.js"></script>
+    <script type="text/javascript">
+        String.prototype.toString = function () { return this; }
+    </script>
+    <script type="text/javascript" src="MazeItCommon.js"></script>
+    <script type="text/javascript" src="MazeItClient.js"></script>
+    <link type="text/css" href="lib/jquery-ui-1.10.2.custom.css" />
+    <link type="text/css" href="lib/site.css" />
+    <style type="text/css">
+        html, body
+        {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
         
-    </body>
+        body
+        {
+            height: 100%;
+            position: relative;
+            width: 100%;
+        }
+        .xstats
+        {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 9999;
+        }
+        body
+        {
+            background-color: #a115ee;
+        }
+    </style>
+</head>
+<body style="overflow:hidden;">
+</body>
 </html>

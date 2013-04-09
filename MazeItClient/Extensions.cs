@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-namespace Blockade
+namespace MazeItClient
 {
     public static class Extensions
     {

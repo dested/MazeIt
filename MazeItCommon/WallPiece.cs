@@ -2,9 +2,9 @@ namespace MazeItCommon
 {
     public enum WallPiece
     {
-        South,
-        North,
-        East,
-        West
+        South=0,
+        North=1,
+        East=2,
+        West=3
     }
 }

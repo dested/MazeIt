@@ -42,16 +42,20 @@
     <Compile Include="MazeGameClient.cs" />
     <Compile Include="Pointer.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="WaitingRoomUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CommonLibraries">
-      <HintPath>..\..\anothershuff\ShufflySharp\Libraries\WebLibraries\bin\Debug\CommonLibraries.dll</HintPath>
+    <Reference Include="CommonLibraries, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\anothershuff\ShufflySharp\Libraries\CommonLibraries\bin\Debug\CommonLibraries.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>$(SolutionDir)packages\Saltarelle.Runtime.2.0.4\tools\Assemblies\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="NodeLibraries, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\anothershuff\ShufflySharp\Libraries\NodeLibraries\bin\Debug\NodeLibraries.dll</HintPath>
     </Reference>
     <Reference Include="Saltarelle.jQuery">
       <HintPath>..\packages\Saltarelle.jQuery.1.9.0\lib\Saltarelle.jQuery.dll</HintPath>

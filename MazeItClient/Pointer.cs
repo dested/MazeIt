@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using CommonLibraries;
-namespace Blockade
+namespace MazeItClient
 {
     public class Pointer : Point
     {

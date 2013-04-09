@@ -36,7 +36,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="MazeGamePlayer.cs" />
+    <Compile Include="MazeServer.cs" />
+    <Compile Include="MazeServerGame.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="WaitingRoom.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -45,8 +49,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CommonLibraries">
-      <HintPath>..\..\sss\ShufflySharp\Libraries\NodeLibraries\SocketIONodeLibrary\bin\Debug\CommonLibraries.dll</HintPath>
+    <Reference Include="CommonLibraries, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\anothershuff\ShufflySharp\Libraries\CommonLibraries\bin\Debug\CommonLibraries.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>$(SolutionDir)packages\Saltarelle.Runtime.2.0.4\tools\Assemblies\mscorlib.dll</HintPath>
@@ -60,6 +64,12 @@
     <Reference Include="SocketIONodeLibrary">
       <HintPath>..\..\sss\ShufflySharp\Libraries\NodeLibraries\SocketIONodeLibrary\bin\Debug\SocketIONodeLibrary.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MazeItCommon\MazeItCommon.csproj">
+      <Project>{399F38FA-7D90-42F6-880F-F10643F2BD28}</Project>
+      <Name>MazeItCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition="!Exists('$(SolutionDir)packages\Saltarelle.Compiler.2.0.4\tools\Saltarelle.Compiler.targets')" />
   <Import Project="$(SolutionDir)packages\Saltarelle.Compiler.2.0.4\tools\Saltarelle.Compiler.targets" Condition="Exists('$(SolutionDir)packages\Saltarelle.Compiler.2.0.4\tools\Saltarelle.Compiler.targets')" />

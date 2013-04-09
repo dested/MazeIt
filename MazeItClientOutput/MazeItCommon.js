@@ -1,21 +1,38 @@
 ﻿(function() {
 	////////////////////////////////////////////////////////////////////////////////
 	// MazeItCommon.Builder
-	var $MazeItCommon_Builder = function(wallInfo) {
+	var $MazeItCommon_Builder = function(wallInfo, color) {
+		this.$1$ColorField = null;
+		this.currentMazePoint = null;
 		this.numHits = null;
 		this.points = null;
 		this.$theWalls = null;
+		this.set_color(color);
 		this.$theWalls = wallInfo;
 		this.numHits = new Array(wallInfo.length);
 		for (var i = 0; i < wallInfo.length; i++) {
 			this.numHits[i] = new Array(wallInfo.length);
 		}
 		this.numHits[0][0] = true;
+		this.currentMazePoint = new CommonLibraries.IntPoint(0, 0);
 		this.points = [];
-		this.addIntPoint(new CommonLibraries.IntPoint(0, 0), true);
+		this.addPoint(new CommonLibraries.IntPoint(0, 0), true);
 	};
 	$MazeItCommon_Builder.prototype = {
-		addIntPoint: function(p, wasBad) {
+		get_color: function() {
+			return this.$1$ColorField;
+		},
+		set_color: function(value) {
+			this.$1$ColorField = value;
+		},
+		addMazePoint: function(p0) {
+			var d = this.addPoint(p0, false) === 0;
+			if (d) {
+				this.currentMazePoint = p0;
+			}
+			return d;
+		},
+		addPoint: function(p, wasBad) {
 			if (p.x < 0 || p.x >= this.$theWalls.length || p.y < 0 || p.y >= this.$theWalls.length) {
 				return 1;
 			}
@@ -68,6 +85,7 @@
 			//
 			//            NumHits[pm.X, pm.Y] = !NumHits[pm.X, pm.Y];
 			ss.add(this.points, p);
+			console.log('Adding Point: ' + this.points.length);
 			return 0;
 		},
 		blockify: function(blockSize) {
@@ -86,6 +104,28 @@
 				ss.add(pts, { item1: this.points[index], item2: intPoint, item3: $MazeItCommon_Builder.toRect(ps, index) });
 			}
 			return pts;
+		},
+		navigate: function(piece) {
+			var point = new CommonLibraries.IntPoint(this.currentMazePoint.x, this.currentMazePoint.y);
+			switch (piece) {
+				case 0: {
+					point.y++;
+					break;
+				}
+				case 1: {
+					point.y--;
+					break;
+				}
+				case 2: {
+					point.x++;
+					break;
+				}
+				case 3: {
+					point.x--;
+					break;
+				}
+			}
+			return this.addMazePoint(point);
 		}
 	};
 	$MazeItCommon_Builder.toRect = function(vf, index) {
@@ -222,7 +262,6 @@
 	var $MazeItCommon_MazeData = function(mazeSize) {
 		this.mazeSize = 0;
 		this.walls = null;
-		this.mazeBuilder = null;
 		this.mazeSize = mazeSize;
 		this.walls = new Array(mazeSize);
 		for (var i = 0; i < this.mazeSize; i++) {
@@ -231,26 +270,75 @@
 				this.walls[i][a] = $MazeItCommon_WallInfo.all();
 			}
 		}
-		this.mazeBuilder = new $MazeItCommon_Builder(this.walls);
 	};
+	$MazeItCommon_MazeData.$ctor1 = function(mazeSize, walls) {
+		this.mazeSize = 0;
+		this.walls = null;
+		this.mazeSize = mazeSize;
+		this.walls = new Array(mazeSize);
+		for (var i = 0; i < this.mazeSize; i++) {
+			this.walls[i] = new Array(this.mazeSize);
+			for (var a = 0; a < this.mazeSize; a++) {
+				this.walls[i][a] = new $MazeItCommon_WallInfo.$ctor1(walls[i][a]);
+			}
+		}
+	};
+	$MazeItCommon_MazeData.$ctor1.prototype = $MazeItCommon_MazeData.prototype;
 	////////////////////////////////////////////////////////////////////////////////
 	// MazeItCommon.MazeGame
-	var $MazeItCommon_MazeGame = function() {
-		this.currentMazePoint = null;
+	var $MazeItCommon_MazeGame = function(playerList, loadedData) {
+		this.playerList = null;
 		this.data = null;
-		this.currentMazePoint = new CommonLibraries.IntPoint(0, 0);
-		this.data = new $MazeItCommon_MazeData(50);
-		var carver = new $MazeItCommon_Carver(this.data);
-		carver.walk();
+		this.mazeBuilders = null;
+		this.playerList = playerList;
+		if (ss.isNullOrUndefined(loadedData)) {
+			this.data = new $MazeItCommon_MazeData(50);
+			var carver = new $MazeItCommon_Carver(this.data);
+			carver.walk();
+		}
+		else {
+			this.data = loadedData;
+		}
+		this.mazeBuilders = {};
+		for (var $t1 = 0; $t1 < this.playerList.length; $t1++) {
+			var mazeGameClientPlayer = this.playerList[$t1];
+			this.mazeBuilders[mazeGameClientPlayer.id] = new $MazeItCommon_Builder(this.data.walls, this.$randomColor());
+		}
 	};
 	$MazeItCommon_MazeGame.prototype = {
-		addMazePoint: function(p0) {
-			var d;
-			if (d = this.data.mazeBuilder.addIntPoint(p0, false) === 0) {
-				this.currentMazePoint = p0;
-			}
-			return d;
+		$randomColor: function() {
+			return '#' + ss.Int32.trunc(Math.floor(Math.random() * 16777215)).toString(16);
 		}
+	};
+	////////////////////////////////////////////////////////////////////////////////
+	// MazeItCommon.MazeGameClientPlayer
+	var $MazeItCommon_MazeGameClientPlayer = function(id) {
+		this.id = 0;
+		this.id = id;
+	};
+	////////////////////////////////////////////////////////////////////////////////
+	// MazeItCommon.MoveDirection
+	var $MazeItCommon_MoveDirection = function() {
+	};
+	$MazeItCommon_MoveDirection.$ctor = function(direction, count) {
+		var $this = {};
+		$this.direction = 0;
+		$this.index = 0;
+		$this.direction = direction;
+		$this.index = count;
+		return $this;
+	};
+	////////////////////////////////////////////////////////////////////////////////
+	// MazeItCommon.PlayerPositionUpdate
+	var $MazeItCommon_PlayerPositionUpdate = function() {
+	};
+	$MazeItCommon_PlayerPositionUpdate.$ctor = function(id, navigate) {
+		var $this = {};
+		$this.id = 0;
+		$this.navigate = 0;
+		$this.id = id;
+		$this.navigate = navigate;
+		return $this;
 	};
 	////////////////////////////////////////////////////////////////////////////////
 	// MazeItCommon.Rect
@@ -328,6 +416,17 @@
 			return false;
 		}
 	};
+	$MazeItCommon_WallInfo.$ctor1 = function(wallInfo) {
+		this.east = false;
+		this.north = false;
+		this.south = false;
+		this.west = false;
+		this.east = wallInfo.east;
+		this.west = wallInfo.west;
+		this.north = wallInfo.north;
+		this.south = wallInfo.south;
+	};
+	$MazeItCommon_WallInfo.$ctor1.prototype = $MazeItCommon_WallInfo.prototype;
 	$MazeItCommon_WallInfo.all = function() {
 		var b = new $MazeItCommon_WallInfo();
 		b.south = true;
@@ -346,6 +445,9 @@
 	ss.registerClass(global, 'MazeItCommon.Carver', $MazeItCommon_Carver);
 	ss.registerClass(global, 'MazeItCommon.MazeData', $MazeItCommon_MazeData);
 	ss.registerClass(global, 'MazeItCommon.MazeGame', $MazeItCommon_MazeGame);
+	ss.registerClass(global, 'MazeItCommon.MazeGameClientPlayer', $MazeItCommon_MazeGameClientPlayer);
+	ss.registerClass(global, 'MazeItCommon.MoveDirection', $MazeItCommon_MoveDirection);
+	ss.registerClass(global, 'MazeItCommon.PlayerPositionUpdate', $MazeItCommon_PlayerPositionUpdate);
 	ss.registerClass(global, 'MazeItCommon.Rect', $MazeItCommon_Rect);
 	ss.registerClass(global, 'MazeItCommon.WallInfo', $MazeItCommon_WallInfo);
 })();

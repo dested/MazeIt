@@ -45,8 +45,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CommonLibraries">
-      <HintPath>..\..\anothershuff\ShufflySharp\Libraries\WebLibraries\bin\Debug\CommonLibraries.dll</HintPath>
+    <Reference Include="CommonLibraries, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\anothershuff\ShufflySharp\Libraries\CommonLibraries\bin\Debug\CommonLibraries.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>$(SolutionDir)packages\Saltarelle.Runtime.2.0.4\tools\Assemblies\mscorlib.dll</HintPath>
@@ -72,6 +72,9 @@
     <Compile Include="Carver.cs" />
     <Compile Include="MazeData.cs" />
     <Compile Include="MazeGame.cs" />
+    <Compile Include="MazeGameClientPlayer.cs" />
+    <Compile Include="MoveDirection.cs" />
+    <Compile Include="PlayerPositionUpdate.cs" />
     <Compile Include="Rect.cs" />
     <Compile Include="Status.cs" />
     <Compile Include="WallInfo.cs" />

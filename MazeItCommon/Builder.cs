@@ -5,12 +5,15 @@ namespace MazeItCommon
 {
     public class Builder
     {
+        public string Color { get; set; }
+        public IntPoint CurrentMazePoint;
         public bool[][] NumHits;
         public List<IntPoint> Points;
         private WallInfo[][] theWalls;
 
-        public Builder(WallInfo[][] wallInfo)
+        public Builder(WallInfo[][] wallInfo,string color)
         {
+            Color = color;
             theWalls = wallInfo;
             NumHits = new bool[wallInfo.Length][];
             for (int i = 0; i < wallInfo.Length; i++) {
@@ -18,12 +21,22 @@ namespace MazeItCommon
             }
 
             NumHits[0][0] = true;
+            CurrentMazePoint = new IntPoint(0, 0);
+
             Points = new List<IntPoint>();
 
-            AddIntPoint(new IntPoint(0, 0), true);
+            AddPoint(new IntPoint(0, 0), true);
         }
 
-        public Status AddIntPoint(IntPoint p, bool wasBad)
+        public bool AddMazePoint(IntPoint p0)
+        {
+            bool d = ( AddPoint(p0, false) == Status.Good );
+            if (d)
+                CurrentMazePoint = p0;
+            return d;
+        }
+
+        public Status AddPoint(IntPoint p, bool wasBad)
         {
             if (p.X < 0 || p.X >= theWalls.Length || p.Y < 0 || p.Y >= theWalls.Length)
                 return Status.Bad;
@@ -67,7 +80,7 @@ namespace MazeItCommon
             var pm = Points[Points.Count - 1];
             NumHits[pm.X, pm.Y] = !NumHits[pm.X, pm.Y];*/
             Points.Add(p);
-
+            Console.Log("Adding Point: "+Points.Count);
             return Status.Good;
         }
 
@@ -116,6 +129,28 @@ namespace MazeItCommon
             cur = new Rect(left, top, right, bottom);
 
             return cur;
+        }
+
+        public bool Navigate(WallPiece piece)
+        {
+            var point = new IntPoint(CurrentMazePoint.X, CurrentMazePoint.Y);
+            switch (piece) {
+                case WallPiece.South:
+                    point.Y++;
+                    break;
+                case WallPiece.North:
+                    point.Y--;
+                    break;
+                case WallPiece.East:
+                    point.X++;
+                    break;
+                case WallPiece.West:
+                    point.X--;
+                    break;
+            }
+
+
+            return AddMazePoint(point);
         }
     }
 }
