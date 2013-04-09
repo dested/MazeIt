@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using CommonLibraries;
 using MazeItCommon;
 namespace MazeItServer
 {
@@ -23,14 +22,14 @@ namespace MazeItServer
                 mazeGamePlayer.SendMessage("WaitingRoom.GameBeginning", null);
             }
 
-            var playerList = Players.Map(a => new MazeGameClientPlayer(a.ID));
+            var playerList = Players.Map(a => new MazeGameClientPlayer(a.ID, a.Color));
 
             foreach (var mazeGamePlayer in Players) {
                 mazeGamePlayer.SendMessage("MazeGame.PlayerReflect", mazeGamePlayer.ID);
                 mazeGamePlayer.SendMessage("MazeGame.PlayerInfo", playerList);
             }
 
-            Game = new MazeGame(playerList, null);
+            Game = new MazeGame(playerList, null, null);
 
             foreach (var mazeGamePlayer in Players) {
                 mazeGamePlayer.SendMessage("MazeGame.MazeData", Game.Data);
@@ -39,21 +38,14 @@ namespace MazeItServer
 
         public PlayerPositionUpdate MovePlayer(MazeGamePlayer player, MoveDirection piece)
         {
+            PlayerPositionUpdate playerPositionUpdate = null;
 
-            PlayerPositionUpdate playerPositionUpdate=null;
-            
             var mazeBuilder = Game.MazeBuilders[player.ID];
-            Console.Log(string.Format("Trying Moved player {0}: {1} Index: {2}", player.ID, piece.Direction.ToString(),piece.Index));
 
-            if (mazeBuilder.Navigate(piece.Direction))
-            {
-
-                Console.Log(string.Format("Moved player {0}: {1} {2}", player.ID, mazeBuilder.CurrentMazePoint.X, mazeBuilder.CurrentMazePoint.Y));
-            
+            if (mazeBuilder.Navigate(piece.Direction)) {
                 playerPositionUpdate = new PlayerPositionUpdate(player.ID, piece.Direction);
 
-
-                if (mazeBuilder.CurrentMazePoint.X == 49 && mazeBuilder.CurrentMazePoint.Y == 49) {
+                if (mazeBuilder.CurrentMazePoint.X == Game.Data.MazeSize - 1 && mazeBuilder.CurrentMazePoint.Y == Game.Data.MazeSize - 1) {
                     foreach (var mazeGamePlayer in Players) {
                         mazeGamePlayer.SendMessage("MazeGame.PlayerWon", player.ID);
                     }
@@ -66,7 +58,7 @@ namespace MazeItServer
         {
             Players.Remove(player);
             foreach (var mazeGamePlayer in Players) {
-                mazeGamePlayer.SendMessage("MazeGame.PlayerLeft", new MazeGameClientPlayer(player.ID));
+                mazeGamePlayer.SendMessage("MazeGame.PlayerLeft", new MazeGameClientPlayer(player.ID, player.Color));
             }
 
             if (Players.Count == 0) myServer.Games.Remove(this);
@@ -74,12 +66,8 @@ namespace MazeItServer
 
         public bool ContainsPlayer(MazeGamePlayer player)
         {
-            foreach (var mazeGamePlayer in Players)
-            {
-                if (mazeGamePlayer.ID == player.ID) {
-                    return true;
-                }
-
+            foreach (var mazeGamePlayer in Players) {
+                if (mazeGamePlayer.ID == player.ID) return true;
             }
             return false;
         }

@@ -5,25 +5,23 @@
 		this.$myCurrent = null;
 		this.$myMainCanvasInfo = null;
 		this.$myPlaceCanvasInfo = null;
+		this.$myProgram = null;
 		this.$blockSize = 20;
 		this.$dragging = false;
 		this.$lineSize = 2;
 		this.$myHeight = 0;
-		this.$myProgram = null;
 		this.$myWidth = 0;
 		this.$positionOffset = new CommonLibraries.IntPoint(0, 0);
 		this.$scaleOffset = 1;
 		this.$scaling = false;
 		this.$startMouse = null;
-		MazeItCommon.MazeGame.call(this, players, loadedData);
+		MazeItCommon.MazeGame.call(this, players, current, loadedData);
 		this.$myProgram = program;
 		this.$myWidth = width;
 		this.$myHeight = height;
 		this.$myMainCanvasInfo = mainCanvasInfo;
 		this.$myPlaceCanvasInfo = placeCanvasInfo;
 		this.$myCurrent = current;
-		this.$positionOffset.x += ss.Int32.div(this.$myWidth, 8);
-		this.$positionOffset.y += ss.Int32.div(this.$myHeight, 8);
 		this.$draw();
 	};
 	$MazeItClient_$MazeGameClient.prototype = {
@@ -106,18 +104,20 @@
 			return new CommonLibraries.IntPoint(lastMous.x - startMouse.x, lastMous.y - startMouse.y);
 		},
 		$draw: function() {
+			this.$positionOffset.x = Math.max(Math.min(ss.Int32.div(this.$myWidth, 2) - this.get_$currentBuilder().currentMazePoint.x * this.$blockSize, ss.Int32.div(this.$myWidth, 8)), -this.data.mazeSize * this.$blockSize + (this.$myWidth - ss.Int32.div(this.$myWidth, 8)));
+			this.$positionOffset.y = Math.max(Math.min(ss.Int32.div(this.$myHeight, 2) - this.get_$currentBuilder().currentMazePoint.y * this.$blockSize, ss.Int32.div(this.$myHeight, 8)), -this.data.mazeSize * this.$blockSize + (this.$myHeight - ss.Int32.div(this.$myHeight, 8)));
 			var canvas = this.$myMainCanvasInfo.context;
 			canvas.save();
 			canvas.clearRect(0, 0, this.$myWidth, this.$myHeight);
 			canvas.fillStyle = 'white';
-			canvas.translate(this.$positionOffset.x - this.get_$currentBuilder().currentMazePoint.x * this.$blockSize, this.$positionOffset.y - this.get_$currentBuilder().currentMazePoint.y * this.$blockSize);
+			canvas.translate(this.$positionOffset.x, this.$positionOffset.y);
 			canvas.scale(this.$scaleOffset, this.$scaleOffset);
 			canvas.lineCap = 'round';
 			canvas.lineJoin = 'round';
 			for (var i = 0; i < this.data.mazeSize; i++) {
 				for (var a = 0; a < this.data.mazeSize; a++) {
-					var i1 = i * this.$blockSize - this.get_$currentBuilder().currentMazePoint.x * this.$blockSize + this.$positionOffset.x;
-					var a1 = a * this.$blockSize - this.get_$currentBuilder().currentMazePoint.y * this.$blockSize + this.$positionOffset.y;
+					var i1 = i * this.$blockSize + this.$positionOffset.x;
+					var a1 = a * this.$blockSize + this.$positionOffset.y;
 					if (i1 > -this.$blockSize && i1 < this.$myWidth / this.$scaleOffset && a1 > -this.$blockSize && a1 < this.$myHeight / this.$scaleOffset) {
 						if (this.data.walls[i][a].contains(3)) {
 							canvas.fillRect((i + 1) * this.$blockSize, a * this.$blockSize - this.$lineSize * 2, this.$lineSize, this.$blockSize + this.$lineSize * 2);
@@ -141,32 +141,32 @@
 			var canvas = this.$myPlaceCanvasInfo.context;
 			canvas.save();
 			canvas.clearRect(0, 0, this.$myWidth, this.$myHeight);
-			canvas.translate(this.$positionOffset.x - this.get_$currentBuilder().currentMazePoint.x * this.$blockSize, this.$positionOffset.y - this.get_$currentBuilder().currentMazePoint.y * this.$blockSize);
+			canvas.translate(this.$positionOffset.x, this.$positionOffset.y);
 			canvas.scale(this.$scaleOffset, this.$scaleOffset);
-			canvas.lineCap = 'round';
-			canvas.lineJoin = 'round';
+			var offsets = [0, 1, -1, 2, -2, 3, -3];
+			var index = 0;
 			var $t1 = new ss.ObjectEnumerator(this.mazeBuilders);
 			try {
 				while ($t1.moveNext()) {
 					var mazeBuilder = $t1.current();
 					var currentBuilder = mazeBuilder.value;
-					var vf = currentBuilder.blockify(this.$blockSize);
+					var vf = currentBuilder.blockify(this.$blockSize, offsets[index++]);
 					var inj = vf.length;
 					if (inj > 1) {
 						for (var $t2 = 0; $t2 < vf.length; $t2++) {
 							var m = vf[$t2];
-							var i1 = m.item1.x * this.$blockSize - this.get_$currentBuilder().currentMazePoint.x * this.$blockSize + this.$positionOffset.x;
-							var a1 = m.item1.y * this.$blockSize - this.get_$currentBuilder().currentMazePoint.y * this.$blockSize + this.$positionOffset.y;
+							var i1 = m.item1.x * this.$blockSize + this.$positionOffset.x;
+							var a1 = m.item1.y * this.$blockSize + this.$positionOffset.y;
 							if (i1 > -this.$blockSize && i1 < this.$myWidth / this.$scaleOffset && a1 > -this.$blockSize && a1 < this.$myHeight / this.$scaleOffset) {
 								if (currentBuilder.numHits[m.item1.x][m.item1.y]) {
 									canvas.save();
-									canvas.fillStyle = currentBuilder.get_color();
+									canvas.fillStyle = MazeItCommon.Extensions.shadeColor(currentBuilder.get_color(), 40);
 									canvas.fillRect(m.item3.left, m.item3.top, m.item3.get_width(), m.item3.get_height());
 									canvas.restore();
 								}
 								else {
 									canvas.save();
-									canvas.fillStyle = currentBuilder.get_color();
+									canvas.fillStyle = MazeItCommon.Extensions.shadeColor(currentBuilder.get_color(), -40);
 									canvas.fillRect(m.item3.left, m.item3.top, m.item3.get_width(), m.item3.get_height());
 									canvas.restore();
 								}
@@ -174,16 +174,16 @@
 						}
 						for (var $t3 = 0; $t3 < vf.length; $t3++) {
 							var m1 = vf[$t3];
-							var i11 = m1.item1.x * this.$blockSize - this.get_$currentBuilder().currentMazePoint.x * this.$blockSize + this.$positionOffset.x;
-							var a11 = m1.item1.y * this.$blockSize - this.get_$currentBuilder().currentMazePoint.y * this.$blockSize + this.$positionOffset.y;
+							var i11 = m1.item1.x * this.$blockSize + this.$positionOffset.x;
+							var a11 = m1.item1.y * this.$blockSize + this.$positionOffset.y;
 							if (i11 > -this.$blockSize && i11 < this.$myWidth / this.$scaleOffset && a11 > -this.$blockSize && a11 < this.$myHeight / this.$scaleOffset) {
 								this.$drawCircle(canvas, m1.item2.x, m1.item2.y, 'purple', this.$lineSize * 2);
 							}
 						}
-						this.$drawCircle(canvas, currentBuilder.currentMazePoint.x * this.$blockSize + ss.Int32.div(this.$blockSize, 2), currentBuilder.currentMazePoint.y * this.$blockSize + ss.Int32.div(this.$blockSize, 2), currentBuilder.get_color(), this.$lineSize * 4);
+						this.$drawCircle(canvas, currentBuilder.currentMazePoint.x * this.$blockSize + ss.Int32.div(this.$blockSize, 2), currentBuilder.currentMazePoint.y * this.$blockSize + ss.Int32.div(this.$blockSize, 2), currentBuilder.get_color(), this.$lineSize * 5);
 					}
 					else if (vf.length === 1) {
-						this.$drawCircle(canvas, currentBuilder.currentMazePoint.x * this.$blockSize + ss.Int32.div(this.$blockSize, 2), currentBuilder.currentMazePoint.y * this.$blockSize + ss.Int32.div(this.$blockSize, 2), currentBuilder.get_color(), this.$lineSize * 4);
+						this.$drawCircle(canvas, currentBuilder.currentMazePoint.x * this.$blockSize + ss.Int32.div(this.$blockSize, 2), currentBuilder.currentMazePoint.y * this.$blockSize + ss.Int32.div(this.$blockSize, 2), currentBuilder.get_color(), this.$lineSize * 5);
 					}
 					else if (vf.length === 0) {
 					}
@@ -217,10 +217,10 @@
 		this.$mazeGame = null;
 		this.$placeCanvasInfo = null;
 		this.$client = null;
+		this.$directions = [];
 		this.$myHeight = 0;
 		this.$myWidth = 0;
 		this.$shuffUIManager = null;
-		this.$directions = [];
 	};
 	$MazeItClient_$Program.prototype = {
 		$start: function() {
@@ -352,18 +352,11 @@
 		},
 		$flushMoveQueue: function() {
 			if (this.$directions.length > 0) {
-				//
-				//                                foreach (var moveDirection in directions) {
-				//
-				//                                Console.Log("Moving: "+moveDirection.Index);
-				//
-				//                                }
 				this.$client.emit('GameRoom.PlayerMoves', this.$directions);
 				this.$directions = [];
 			}
 		},
 		$pushMoveDirection: function(direction) {
-			console.log('Attempting Move: ' + direction.index);
 			ss.add(this.$directions, direction);
 		}
 	};
@@ -450,10 +443,6 @@
 		return new $MazeItClient_CanvasInformation(ctx, $(canvas));
 	};
 	////////////////////////////////////////////////////////////////////////////////
-	// MazeItClient.Extensions
-	var $MazeItClient_Extensions = function() {
-	};
-	////////////////////////////////////////////////////////////////////////////////
 	// MazeItClient.Pointer
 	var $MazeItClient_Pointer = function(x, y, delta, right) {
 		this.delta = 0;
@@ -466,7 +455,6 @@
 	ss.registerClass(null, 'MazeItClient.$Program', $MazeItClient_$Program);
 	ss.registerClass(null, 'MazeItClient.$WaitingRoomUI', $MazeItClient_$WaitingRoomUI);
 	ss.registerClass(global, 'MazeItClient.CanvasInformation', $MazeItClient_CanvasInformation);
-	ss.registerClass(global, 'MazeItClient.Extensions', $MazeItClient_Extensions);
 	ss.registerClass(global, 'MazeItClient.Pointer', $MazeItClient_Pointer, CommonLibraries.Point);
 	$MazeItClient_CanvasInformation.$blackPixel = null;
 	$MazeItClient_$Program.$main();

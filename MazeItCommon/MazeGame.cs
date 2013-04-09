@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using CommonLibraries;
 namespace MazeItCommon
 {
     public class MazeGame
@@ -13,7 +11,7 @@ namespace MazeItCommon
         [IntrinsicProperty]
         public JsDictionary<int, Builder> MazeBuilders { get; set; }
 
-        public MazeGame(List<MazeGameClientPlayer> playerList, MazeData loadedData)
+        public MazeGame(List<MazeGameClientPlayer> playerList, MazeGameClientPlayer currentPlayer, MazeData loadedData)
         {
             PlayerList = playerList;
             if (loadedData == null) {
@@ -27,13 +25,13 @@ namespace MazeItCommon
             MazeBuilders = new JsDictionary<int, Builder>();
 
             foreach (var mazeGameClientPlayer in PlayerList) {
-                MazeBuilders[mazeGameClientPlayer.ID] = new Builder(Data.Walls,RandomColor());
+                if (currentPlayer != null) {
+                    if (currentPlayer.ID != mazeGameClientPlayer.ID) MazeBuilders[mazeGameClientPlayer.ID] = new Builder(Data.Walls, mazeGameClientPlayer.Color);
+                } else MazeBuilders[mazeGameClientPlayer.ID] = new Builder(Data.Walls, mazeGameClientPlayer.Color);
             }
-        }
 
-        private string RandomColor()
-        {
-            return "#" + ((int)(Math.Floor(Math.Random() * 16777215))).ToString(16);
+            if (currentPlayer != null)
+                MazeBuilders[currentPlayer.ID] = new Builder(Data.Walls, currentPlayer.Color);
         }
     }
 }

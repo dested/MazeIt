@@ -5,10 +5,13 @@ namespace MazeItCommon
     {
         [IntrinsicProperty]
         public int ID { get; set; }
+        [IntrinsicProperty]
+        public string Color { get; set; }
 
-        public MazeGameClientPlayer(int id)
+        public MazeGameClientPlayer(int id, string color)
         {
             ID = id;
+            Color = color;
         }
     }
 }

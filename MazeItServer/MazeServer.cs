@@ -6,7 +6,7 @@ namespace MazeItServer
 {
     public class MazeServer
     {
-        private const int MaxPlayers = 5;
+        public const int MaxPlayers = 5;
         [IntrinsicProperty]
         public List<MazeServerGame> Games { get; set; }
         [IntrinsicProperty]
@@ -23,7 +23,7 @@ namespace MazeItServer
 
         public void AddPlayer(int userID, Action<string, object> sendMessage)
         {
-            var mazeGamePlayer = new MazeGamePlayer(userID, sendMessage);
+            var mazeGamePlayer = new MazeGamePlayer(userID, Extensions.RandomColor(), sendMessage);
             Players[userID] = mazeGamePlayer;
 
             foreach (var waitingRoom in WaitingRooms) {
@@ -57,22 +57,14 @@ namespace MazeItServer
                 if (gameRoom.ContainsPlayer(player)) {
                     List<PlayerPositionUpdate> updates = new List<PlayerPositionUpdate>();
 
-                    foreach (var wallPiece in directions)
-                    {
-                        var update=gameRoom.MovePlayer(player, wallPiece);
-                        if (update != null) {
-                            updates.Add(update);
-                        }
+                    foreach (var wallPiece in directions) {
+                        var update = gameRoom.MovePlayer(player, wallPiece);
+                        if (update != null) updates.Add(update);
                     }
 
-
-                    foreach (var mazeGamePlayer in gameRoom.Players)
-                    {
+                    foreach (var mazeGamePlayer in gameRoom.Players) {
                         if (mazeGamePlayer != player)
-                        {
-                            
                             mazeGamePlayer.SendMessage("MazeGame.PlayerPositionUpdates", updates);
-                        }
                     }
                     return;
                 }

@@ -6,19 +6,14 @@ namespace MazeItCommon
         public bool North;
         public bool South;
         public bool West;
+        public WallInfo() {}
 
-        public WallInfo()
-        {
-
-
-        }
         public WallInfo(WallInfo wallInfo)
         {
             East = wallInfo.East;
             West = wallInfo.West;
             North = wallInfo.North;
             South = wallInfo.South;
-
         }
 
         public static WallInfo All()

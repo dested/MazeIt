@@ -10,11 +10,11 @@ namespace MazeItClient
         private readonly MazeGameClientPlayer myCurrent;
         private readonly CanvasInformation myMainCanvasInfo;
         private readonly CanvasInformation myPlaceCanvasInfo;
+        private readonly Program myProgram;
         private int BlockSize = 20;
         public bool dragging = false;
         private int lineSize = 2;
         private int myHeight;
-        private readonly Program myProgram;
         private int myWidth;
         private IntPoint positionOffset = new IntPoint(0, 0);
         private float scaleOffset = 1;
@@ -26,7 +26,7 @@ namespace MazeItClient
         }
 
         public MazeGameClient(Program program, int width, int height, CanvasInformation mainCanvasInfo, CanvasInformation placeCanvasInfo, List<MazeGameClientPlayer> players, MazeGameClientPlayer current, MazeData loadedData)
-                : base(players, loadedData)
+                : base(players, current, loadedData)
         {
             myProgram = program;
             myWidth = width;
@@ -34,9 +34,6 @@ namespace MazeItClient
             myMainCanvasInfo = mainCanvasInfo;
             myPlaceCanvasInfo = placeCanvasInfo;
             myCurrent = current;
-
-            positionOffset.X += ( myWidth / 8 );
-            positionOffset.Y += ( myHeight / 8 );
 
             Draw();
         }
@@ -87,7 +84,7 @@ namespace MazeItClient
                     break;
             }
             if (b) {
-                myProgram.PushMoveDirection(new MoveDirection(direction,CurrentBuilder.Points.Count));
+                myProgram.PushMoveDirection(new MoveDirection(direction, CurrentBuilder.Points.Count));
                 Draw();
             }
             startMouse = lastMous;
@@ -122,14 +119,17 @@ namespace MazeItClient
 
         public void Draw()
         {
+            positionOffset.X = Math.Max(Math.Min(( myWidth / 2 ) - CurrentBuilder.CurrentMazePoint.X * BlockSize, ( myWidth / 8 )), -Data.MazeSize * BlockSize + ( myWidth - ( myWidth / 8 ) ));
+            positionOffset.Y = Math.Max(Math.Min(( myHeight / 2 ) - CurrentBuilder.CurrentMazePoint.Y * BlockSize, ( myHeight / 8 )), -Data.MazeSize * BlockSize + ( myHeight - ( myHeight / 8 ) ));
+
             var canvas = myMainCanvasInfo.Context;
             canvas.Save();
             canvas.ClearRect(0, 0, myWidth, myHeight);
 
             canvas.FillStyle = "white";
 
-            canvas.Translate(positionOffset.X - CurrentBuilder.CurrentMazePoint.X * BlockSize,
-                             positionOffset.Y - CurrentBuilder.CurrentMazePoint.Y * BlockSize);
+            canvas.Translate(positionOffset.X,
+                             positionOffset.Y);
             canvas.Scale(scaleOffset, scaleOffset);
 
             canvas.LineCap = LineCap.Round;
@@ -137,8 +137,8 @@ namespace MazeItClient
 
             for (int i = 0; i < Data.MazeSize; i++) {
                 for (int a = 0; a < Data.MazeSize; a++) {
-                    int i1 = ( i ) * BlockSize - CurrentBuilder.CurrentMazePoint.X * BlockSize + positionOffset.X;
-                    int a1 = ( a ) * BlockSize - CurrentBuilder.CurrentMazePoint.Y * BlockSize + positionOffset.Y;
+                    int i1 = ( i ) * BlockSize + positionOffset.X;
+                    int a1 = ( a ) * BlockSize + positionOffset.Y;
                     if (i1 > -BlockSize && i1 < myWidth / scaleOffset && a1 > -BlockSize && a1 < myHeight / scaleOffset) {
                         if (Data.Walls[i][a].Contains(WallPiece.West))
                             canvas.FillRect(( i + 1 ) * BlockSize, ( a ) * BlockSize - lineSize * 2, lineSize, BlockSize + lineSize * 2);
@@ -162,32 +162,31 @@ namespace MazeItClient
 
             canvas.ClearRect(0, 0, myWidth, myHeight);
 
-            canvas.Translate(positionOffset.X - CurrentBuilder.CurrentMazePoint.X * BlockSize,
-                             positionOffset.Y - CurrentBuilder.CurrentMazePoint.Y * BlockSize);
+            canvas.Translate(positionOffset.X,
+                             positionOffset.Y);
             canvas.Scale(scaleOffset, scaleOffset);
 
-            canvas.LineCap = LineCap.Round;
-            canvas.LineJoin = LineJoin.Round;
-
+            int[] offsets = new[] {0, 1, -1, 2, -2, 3, -3};
+            int index = 0;
             foreach (var mazeBuilder in MazeBuilders) {
                 var currentBuilder = mazeBuilder.Value;
 
-                List<Tuple<IntPoint, IntPoint, Rect>> vf = currentBuilder.Blockify(BlockSize);
+                List<Tuple<IntPoint, IntPoint, Rect>> vf = currentBuilder.Blockify(BlockSize, offsets[index++]);
 
                 int inj = vf.Count;
                 if (inj > 1) {
                     foreach (Tuple<IntPoint, IntPoint, Rect> m in vf) {
-                        int i1 = ( m.Item1.X ) * BlockSize - CurrentBuilder.CurrentMazePoint.X * BlockSize + positionOffset.X;
-                        int a1 = ( m.Item1.Y ) * BlockSize - CurrentBuilder.CurrentMazePoint.Y * BlockSize + positionOffset.Y;
+                        int i1 = ( m.Item1.X ) * BlockSize + positionOffset.X;
+                        int a1 = ( m.Item1.Y ) * BlockSize + positionOffset.Y;
                         if (i1 > -BlockSize && i1 < myWidth / scaleOffset && a1 > -BlockSize && a1 < myHeight / scaleOffset) {
                             if (currentBuilder.NumHits[m.Item1.X][m.Item1.Y]) {
                                 canvas.Save();
-                                canvas.FillStyle = currentBuilder.Color;
+                                canvas.FillStyle = Extensions.ShadeColor(currentBuilder.Color, 40);
                                 canvas.FillRect(m.Item3.Left, m.Item3.Top, m.Item3.Width, m.Item3.Height);
                                 canvas.Restore();
                             } else {
                                 canvas.Save();
-                                canvas.FillStyle = currentBuilder.Color;
+                                canvas.FillStyle = Extensions.ShadeColor(currentBuilder.Color, -40);
                                 canvas.FillRect(m.Item3.Left, m.Item3.Top, m.Item3.Width, m.Item3.Height);
                                 canvas.Restore();
                             }
@@ -195,8 +194,8 @@ namespace MazeItClient
                     }
 
                     foreach (Tuple<IntPoint, IntPoint, Rect> m in vf) {
-                        int i1 = ( m.Item1.X ) * BlockSize - CurrentBuilder.CurrentMazePoint.X * BlockSize + positionOffset.X;
-                        int a1 = ( m.Item1.Y ) * BlockSize - CurrentBuilder.CurrentMazePoint.Y * BlockSize + positionOffset.Y;
+                        int i1 = ( m.Item1.X ) * BlockSize + positionOffset.X;
+                        int a1 = ( m.Item1.Y ) * BlockSize + positionOffset.Y;
                         if (i1 > -BlockSize && i1 < myWidth / scaleOffset && a1 > -BlockSize && a1 < myHeight / scaleOffset)
                             drawCircle(canvas, m.Item2.X, m.Item2.Y, "purple", lineSize * 2);
                     }
@@ -205,13 +204,13 @@ namespace MazeItClient
                                currentBuilder.CurrentMazePoint.X * BlockSize + ( BlockSize / 2 ),
                                currentBuilder.CurrentMazePoint.Y * BlockSize + ( BlockSize / 2 ),
                                currentBuilder.Color,
-                               lineSize * 4);
+                               lineSize * 5);
                 } else if (vf.Count == 1) {
                     drawCircle(canvas,
                                currentBuilder.CurrentMazePoint.X * BlockSize + ( BlockSize / 2 ),
                                currentBuilder.CurrentMazePoint.Y * BlockSize + ( BlockSize / 2 ),
                                currentBuilder.Color,
-                               lineSize * 4);
+                               lineSize * 5);
                 } else if (vf.Count == 0) {}
             }
 

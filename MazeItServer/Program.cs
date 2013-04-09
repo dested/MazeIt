@@ -38,7 +38,7 @@ namespace MazeItServer
                               socket.On("WaitingRoom.VoteStart",
                                         (object data) => { server.ChangeVoteStart(userID, (bool) data); });
                               socket.On("GameRoom.PlayerMoves",
-                                        (object data) => { server.MovePlayer(userID, (List<MoveDirection>)data); });
+                                        (object data) => { server.MovePlayer(userID, (List<MoveDirection>) data); });
                               socket.On("disconnect",
                                         (string data) => {
                                             Console.Log("User Left " + userID);

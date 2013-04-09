@@ -5,13 +5,13 @@ namespace MazeItCommon
 {
     public class Builder
     {
-        public string Color { get; set; }
         public IntPoint CurrentMazePoint;
         public bool[][] NumHits;
         public List<IntPoint> Points;
         private WallInfo[][] theWalls;
+        public string Color { get; set; }
 
-        public Builder(WallInfo[][] wallInfo,string color)
+        public Builder(WallInfo[][] wallInfo, string color)
         {
             Color = color;
             theWalls = wallInfo;
@@ -80,11 +80,11 @@ namespace MazeItCommon
             var pm = Points[Points.Count - 1];
             NumHits[pm.X, pm.Y] = !NumHits[pm.X, pm.Y];*/
             Points.Add(p);
-            Console.Log("Adding Point: "+Points.Count);
+
             return Status.Good;
         }
 
-        public List<Tuple<IntPoint, IntPoint, Rect>> Blockify(int blockSize)
+        public List<Tuple<IntPoint, IntPoint, Rect>> Blockify(int blockSize, int offset)
         {
             List<IntPoint> ps = new List<IntPoint>();
             foreach (IntPoint point in Points) {
@@ -97,13 +97,15 @@ namespace MazeItCommon
 
             for (int index = 0; index < ps.Count - 1; index++) {
                 var intPoint = ps[index];
-                pts.Add(Tuple.Create(Points[index], intPoint, toRect(ps, index)));
+                pts.Add(Tuple.Create(Points[index], intPoint, toRect(ps, index, offset)));
+                intPoint.X += offset;
+                intPoint.Y += offset;
             }
 
             return pts;
         }
 
-        public static Rect toRect(List<IntPoint> vf, int index)
+        public static Rect toRect(List<IntPoint> vf, int index, int offset)
         {
             IntPoint point = vf[index];
             IntPoint point2 = vf[index + 1];
@@ -124,6 +126,15 @@ namespace MazeItCommon
             } else {
                 top = point2.Y - 1;
                 bottom = point.Y + 1;
+            }
+
+            if (point.X == point2.X) {
+                left += offset;
+                right += offset;
+            }
+            if (point.Y == point2.Y) {
+                top += offset;
+                bottom += offset;
             }
 
             cur = new Rect(left, top, right, bottom);
@@ -148,7 +159,6 @@ namespace MazeItCommon
                     point.X--;
                     break;
             }
-
 
             return AddMazePoint(point);
         }

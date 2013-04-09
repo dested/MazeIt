@@ -33,10 +33,12 @@
 	};
 	////////////////////////////////////////////////////////////////////////////////
 	// MazeItServer.MazeGamePlayer
-	var $MazeItServer_MazeGamePlayer = function(id, sendMessage) {
+	var $MazeItServer_MazeGamePlayer = function(id, color, sendMessage) {
 		this.id = 0;
+		this.color = null;
 		this.sendMessage = null;
 		this.id = id;
+		this.color = color;
 		this.sendMessage = sendMessage;
 	};
 	////////////////////////////////////////////////////////////////////////////////
@@ -51,11 +53,11 @@
 	};
 	$MazeItServer_MazeServer.prototype = {
 		addPlayer: function(userID, sendMessage) {
-			var mazeGamePlayer = new $MazeItServer_MazeGamePlayer(userID, sendMessage);
+			var mazeGamePlayer = new $MazeItServer_MazeGamePlayer(userID, MazeItCommon.Extensions.randomColor(), sendMessage);
 			this.players[userID] = mazeGamePlayer;
 			for (var $t1 = 0; $t1 < this.waitingRooms.length; $t1++) {
 				var waitingRoom = this.waitingRooms[$t1];
-				if (waitingRoom.players.length < $MazeItServer_MazeServer.$maxPlayers) {
+				if (waitingRoom.players.length < $MazeItServer_MazeServer.maxPlayers) {
 					waitingRoom.addPlayer(mazeGamePlayer);
 					return;
 				}
@@ -140,14 +142,14 @@
 			mazeGamePlayer.sendMessage('WaitingRoom.GameBeginning', null);
 		}
 		var playerList = this.players.map(function(a) {
-			return new MazeItCommon.MazeGameClientPlayer(a.id);
+			return new MazeItCommon.MazeGameClientPlayer(a.id, a.color);
 		});
 		for (var $t2 = 0; $t2 < this.players.length; $t2++) {
 			var mazeGamePlayer1 = this.players[$t2];
 			mazeGamePlayer1.sendMessage('MazeGame.PlayerReflect', mazeGamePlayer1.id);
 			mazeGamePlayer1.sendMessage('MazeGame.PlayerInfo', playerList);
 		}
-		this.game = new MazeItCommon.MazeGame(playerList, null);
+		this.game = new MazeItCommon.MazeGame(playerList, null, null);
 		for (var $t3 = 0; $t3 < this.players.length; $t3++) {
 			var mazeGamePlayer2 = this.players[$t3];
 			mazeGamePlayer2.sendMessage('MazeGame.MazeData', this.game.data);
@@ -157,11 +159,9 @@
 		movePlayer: function(player, piece) {
 			var playerPositionUpdate = null;
 			var mazeBuilder = this.game.mazeBuilders[player.id];
-			console.log(ss.formatString('Trying Moved player {0}: {1} Index: {2}', player.id, piece.direction.toString(), piece.index));
 			if (mazeBuilder.navigate(piece.direction)) {
-				console.log(ss.formatString('Moved player {0}: {1} {2}', player.id, mazeBuilder.currentMazePoint.x, mazeBuilder.currentMazePoint.y));
 				playerPositionUpdate = MazeItCommon.PlayerPositionUpdate.$ctor(player.id, piece.direction);
-				if (mazeBuilder.currentMazePoint.x === 49 && mazeBuilder.currentMazePoint.y === 49) {
+				if (mazeBuilder.currentMazePoint.x === this.game.data.mazeSize - 1 && mazeBuilder.currentMazePoint.y === this.game.data.mazeSize - 1) {
 					for (var $t1 = 0; $t1 < this.players.length; $t1++) {
 						var mazeGamePlayer = this.players[$t1];
 						mazeGamePlayer.sendMessage('MazeGame.PlayerWon', player.id);
@@ -174,7 +174,7 @@
 			ss.remove(this.players, player);
 			for (var $t1 = 0; $t1 < this.players.length; $t1++) {
 				var mazeGamePlayer = this.players[$t1];
-				mazeGamePlayer.sendMessage('MazeGame.PlayerLeft', new MazeItCommon.MazeGameClientPlayer(player.id));
+				mazeGamePlayer.sendMessage('MazeGame.PlayerLeft', new MazeItCommon.MazeGameClientPlayer(player.id, player.color));
 			}
 			if (this.players.length === 0) {
 				ss.remove(this.$myServer.games, this);
@@ -204,22 +204,33 @@
 		addPlayer: function(player) {
 			ss.add(this.players, player);
 			this.voteStart[player.id] = false;
-			console.log('Number of players: ' + this.players.length);
+			if (this.players.length === $MazeItServer_MazeServer.maxPlayers) {
+				var $t1 = new ss.ObjectEnumerator(this.voteStart);
+				try {
+					while ($t1.moveNext()) {
+						var vs = $t1.current();
+						this.voteStart[vs.key] = true;
+					}
+				}
+				finally {
+					$t1.dispose();
+				}
+			}
 			var count = 0;
-			var $t1 = new ss.ObjectEnumerator(this.voteStart);
+			var $t2 = new ss.ObjectEnumerator(this.voteStart);
 			try {
-				while ($t1.moveNext()) {
-					var vs = $t1.current();
-					if (vs.value) {
+				while ($t2.moveNext()) {
+					var vs1 = $t2.current();
+					if (vs1.value) {
 						count++;
 					}
 				}
 			}
 			finally {
-				$t1.dispose();
+				$t2.dispose();
 			}
-			for (var $t2 = 0; $t2 < this.players.length; $t2++) {
-				var mazeGamePlayer = this.players[$t2];
+			for (var $t3 = 0; $t3 < this.players.length; $t3++) {
+				var mazeGamePlayer = this.players[$t3];
 				mazeGamePlayer.sendMessage('WaitingRoom.PlayerCountChanged', this.players.length);
 				this.$voteStartUpdated(count, mazeGamePlayer);
 			}
@@ -284,7 +295,7 @@
 	ss.registerClass(global, 'MazeItServer.MazeServer', $MazeItServer_MazeServer);
 	ss.registerClass(global, 'MazeItServer.MazeServerGame', $MazeItServer_MazeServerGame);
 	ss.registerClass(global, 'MazeItServer.WaitingRoom', $MazeItServer_WaitingRoom);
-	$MazeItServer_MazeServer.$maxPlayers = 5;
+	$MazeItServer_MazeServer.maxPlayers = 5;
 	require('./mscorlib');
 	require('./CommonLibraries');
 	require('./NodeLibraries');

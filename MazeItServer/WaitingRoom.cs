@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using CommonLibraries;
 namespace MazeItServer
 {
     public class WaitingRoom
@@ -22,7 +21,11 @@ namespace MazeItServer
         {
             Players.Add(player);
             VoteStart[player.ID] = false;
-            Console.Log("Number of players: " + Players.Count);
+            if (Players.Count == MazeServer.MaxPlayers) {
+                foreach (var vs in VoteStart) {
+                    VoteStart[vs.Key] = true;
+                }
+            }
 
             int count = 0;
             foreach (var vs in VoteStart) {
